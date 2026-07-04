@@ -52,7 +52,9 @@ in{
                             formulahendry.code-runner
                             shardulm94.trailing-spaces
                             aaron-bond.better-comments
-                            streetsidesoftware.code-spell-checker
+
+                            tekumara.typos-vscode
+                            # streetsidesoftware.code-spell-checker
 
                             #? theming
                             pkief.material-icon-theme

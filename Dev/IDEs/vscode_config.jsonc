@@ -117,20 +117,30 @@
   // ============================================================================
   // LANGUAGE: NIX
   // ============================================================================
+  "[nix]": {
+    "editor.defaultFormatter": "jnoortheen.nix-ide",
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true,
+    "editor.formatOnSave": false
+  },
+
   "nix.serverPath": "nixd",
   "nix.enableLanguageServer": true,
   "nix.serverSettings": {
     "nixd": {
       "formatting": {
-        "command": ["alejandra"],
+        "command": ["alejandra"]
+      },
+      "diagnostic": {
+        "suppress": []
       },
       "options": {
         "enable": true,
         "target": {
-          "args": [],
-        },
-      },
-    },
+          "args": []
+        }
+      }
+    }
   },
 
   // ============================================================================
@@ -151,13 +161,13 @@
   "ruff.trace.server": "off",
   "ruff.path": ["/run/current-system/sw/bin/ruff"],
 
+  "basedpyright.disableOrganizeImports": true,
+  "basedpyright.disableLanguageServices": false,
   "basedpyright.analysis.autoSearchPaths": true,
   "basedpyright.analysis.useLibraryCodeForTypes": true,
-  "basedpyright.disableLanguageServices": false,
-  "basedpyright.disableOrganizeImports": true,
 
-  "python.terminal.focusAfterLaunch": true,
   "python.terminal.launchArgs": [],
+  "python.terminal.focusAfterLaunch": true,
   "python.terminal.activateEnvironment": false,
   "python.createEnvironment.contentButton": "show",
 
@@ -166,7 +176,7 @@
 
   // TELEMTRY
   "python.experiments.enabled": false,
-  "python.diagnostics.sourceMapsEnabled": true,
+  "python.diagnostics.sourceMapsEnabled": false,
 
   // ============================================================================
   // LANGUAGE: Zig
@@ -185,7 +195,6 @@
   // ============================================================================
   // LANGUAGE: GO
   // ============================================================================
-
   "[go]": {
     "editor.defaultFormatter": "golang.go",
     "editor.formatOnSave": true,
@@ -238,6 +247,26 @@
 
   "slint.lspBinaryPath": "/run/current-system/sw/bin/slint-lsp",
   "slint.preview.style": "native",
+
+
+  // ============================================================================
+  // LANGUAGE: Prolog
+  // ============================================================================
+  "[prolog]": {
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true,
+    "editor.formatOnSave": false
+  },
+
+  "prolog.executablePath": "/run/current-system/sw/bin/swipl",
+  "prolog.dialect": "swi",
+  "prolog.terminal.runtimeArgs": [],
+  "prolog.linter.run": "onType",
+  "prolog.linter.delay": 500,
+  "prolog.linter.enableMsgInOutput": true,
+  "prolog.format.enabled": true,
+  "prolog.format.tabSize": 4,
+  "prolog.format.insertSpaces": true,
 
   // ============================================================================
   // LANGUAGE: JSON
@@ -449,162 +478,11 @@
   // ============================================================================
   // SPELL CHECKER
   // ============================================================================
-  "cSpell.language": "en,en-GB,en-US,lorem",
-  "cSpell.userWords": [
-    "adfs",
-    "affs",
-    "aspm",
-    "befs",
-    "bmof",
-    "curr",
-    "DIMM",
-    "ehci",
-    "haxe",
-    "hpfs",
-    "hyst",
-    "iwyu",
-    "kitc",
-    "kmod",
-    "lein",
-    "nixd",
-    "omfs",
-    "oomd",
-    "pkgs",
-    "rmem",
-    "rmem",
-    "sbcl",
-    "SMSC",
-    "spwn",
-    "srgb",
-    "sysv",
-    "Udio",
-    "vfat",
-    "vfio",
-    "vsix",
-    "wmem",
-    "xhci",
-    "zram",
-    "zstd",
-    "acpid",
-    "Allam",
-    "bluez",
-    "btrfs",
-    "CPLUS",
-    "cpuid",
-    "ctest",
-    "erofs",
-    "exofs",
-    "gmbus",
-    "hwmon",
-    "Hygon",
-    "iommu",
-    "IOMMU",
-    "javac",
-    "Karim",
-    "lessc",
-    "lockb",
-    "Lukin",
-    "mptcp",
-    "nixos",
-    "nopti",
-    "Origa",
-    "qdisc",
-    "regdb",
-    "rustc",
-    "smbus",
-    "acpitz",
-    "AMDGPU",
-    "autoit",
-    "clangd",
-    "cramfs",
-    "cstate",
-    "dotenv",
-    "Fintek",
-    "ftrace",
-    "habibi",
-    "iwlmvm",
-    "keymap",
-    "Mariam",
-    "mdmath",
-    "netrom",
-    "nilfs2",
-    "nixfmt",
-    "Nologo",
-    "OPENAI",
-    "pstate",
-    "pyvips",
-    "rfkill",
-    "runghc",
-    "subvol",
-    "synack",
-    "uinput",
-    "alllows",
-    "blueman",
-    "Blueman",
-    "cpufreq",
-    "cscript",
-    "escript",
-    "Iosevka",
-    "iwlwifi",
-    "MASRKAI",
-    "nixpkgs",
-    "noatime",
-    "nomerge",
-    "Nuvoton",
-    "psmouse",
-    "Rscript",
-    "tabnine",
-    "usbcore",
-    "Winbond",
-    "aircrack",
-    "coretemp",
-    "flakeref",
-    "freevxfs",
-    "gfortran",
-    "hasalpha",
-    "jpegsave",
-    "LNXSYBUS",
-    "LNXSYSTM",
-    "revealjs",
-    "scriptcs",
-    "setupcpp",
-    "Setupcpp",
-    "spindown",
-    "vbscript",
-    "vsyscall",
-    "acpilight",
-    "autofetch",
-    "centisecs",
-    "codealpha",
-    "drivetemp",
-    "keepalive",
-    "nospectre",
-    "osascript",
-    "redzoning",
-    "streamlit",
-    "sysconfig",
-    "writeback",
-    "autodefrag",
-    "autohotkey",
-    "lrwxrwxrwx",
-    "mindshield",
-    "nodiratime",
-    "nowatchdog",
-    "scrollback",
-    "syncookies",
-    "threadirqs",
-    "vboxnetadp",
-    "vboxnetflt",
-    "applescript",
-    "apportunity",
-    "autosuspend",
-    "colourspace",
-    "evillimiter",
-    "flamegraphs",
-    "powersaving",
-    "explainshell",
-    "networkmanager",
-  ],
+
+  "typos.logLevel": "warn",
+  "typos.diagnosticSeverity": "Hint",
+  "typos.path": "/run/current-system/sw/bin/typos-lsp",
+
   "qt-core.additionalQtPaths": [
     {
       "name": "Qt-6.10.1-linux-g++_from_PATH",

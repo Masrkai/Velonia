@@ -10,6 +10,7 @@
     ./java.nix
     ./kotlin.nix
     ./python.nix
+    ./prolog.nix
   ];
 
 }

@@ -3,7 +3,7 @@
 {
 
   general-nixpkgs-extensions = with pkgs.vscode-extensions; [
-    continue.continue
+    # continue.continue
     davidanson.vscode-markdownlint
   ];
 

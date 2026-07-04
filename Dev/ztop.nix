@@ -29,6 +29,9 @@
     glslang
 
     zed-editor-fhs
+
+    typos
+    typos-lsp
   ];
 
 
