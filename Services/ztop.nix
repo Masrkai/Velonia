@@ -27,6 +27,8 @@
 
     ./SSI.nix
 
+    ./Browser.nix
+
 
   ];
 }
