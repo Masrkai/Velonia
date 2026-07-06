@@ -70,7 +70,7 @@
   // ============================================================================
   "terminal.integrated.gpuAcceleration": "off",
   "terminal.integrated.focusAfterRun": "terminal",
-  "terminal.integrated.fontFamily": "'Iosevka Fixed Hv Ex Obl', 'Iosevka Nerd Font','Iosevka Nerd Font Mono', monospace",
+  "terminal.integrated.fontFamily": "'Iosevka Fixed Hv Ex Obl', 'Symbols Nerd Font'",
   "terminal.integrated.fontSize": 14,
   "terminal.explorerKind": "external",
   "terminal.sourceControlRepositoriesKind": "external",
@@ -78,7 +78,14 @@
   "terminal.integrated.hideOnStartup": "whenEmpty",
   "terminal.integrated.defaultProfile.linux": "bash",
   "terminal.integrated.sendKeybindingsToShell": true,
-  "terminal.integrated.customGlyphs": false,
+  "terminal.integrated.customGlyphs": true,
+
+  "terminal.integrated.rendererType": "dom",
+  "terminal.integrated.cursorBlinking": false,
+  "terminal.integrated.smoothScrolling": false,
+  "terminal.integrated.enableFileLinks": "off",
+  "terminal.integrated.shellIntegration.enabled": false,
+
 
   // ============================================================================
   // FILES & EXPLORER
@@ -248,7 +255,6 @@
   "slint.lspBinaryPath": "/run/current-system/sw/bin/slint-lsp",
   "slint.preview.style": "native",
 
-
   // ============================================================================
   // LANGUAGE: Prolog
   // ============================================================================
@@ -267,6 +273,36 @@
   "prolog.format.enabled": true,
   "prolog.format.tabSize": 4,
   "prolog.format.insertSpaces": true,
+
+  // ============================================================================
+  // LANGUAGE: PlantUML
+  // ============================================================================
+  "plantuml.java": "",
+  "plantuml.jar": "/run/current-system/sw/lib/plantuml.jar",
+  "plantuml.render": "Local",
+  "plantuml.urlFormat": "svg",
+  "plantuml.exportFormat": "svg",
+
+  // ============================================================================
+  // LANGUAGE: Markdown
+  // ============================================================================
+
+  "[markdown]": {
+    "editor.defaultFormatter": "DavidAnson.vscode-markdownlint",
+    "editor.formatOnSave": true,
+  },
+  "markdown-preview-enhanced.plantumlJarPath": "/run/current-system/sw/lib/plantuml.jar",
+  "markdown-preview-enhanced.chromePath": "/run/current-system/sw/bin/brave",
+  "markdown-preview-enhanced.codeBlockTheme": "dark.css",
+  "markdown-preview-enhanced.enableCriticMarkupSyntax": true,
+  "markdown-preview-enhanced.enableExtendedTableSyntax": true,
+  "markdown-preview-enhanced.mermaidTheme": "dark",
+  "markdown-preview-enhanced.previewColorScheme": "systemColorScheme",
+  "markdown-preview-enhanced.revealjsTheme": "black.css",
+  "markdown-preview-enhanced.previewTheme": "atom-dark.css",
+  "markdown-preview-enhanced.usePandocParser": true,
+  "markdown-preview-enhanced.latexEngine": "xelatex",
+  "markdown-preview-enhanced.mathRenderingOption": "MathJax",
 
   // ============================================================================
   // LANGUAGE: JSON
@@ -435,20 +471,6 @@
   "cmake.configureOnEdit": false,
   "cmake.ctest.testExplorerIntegrationEnabled": false,
 
-  // ============================================================================
-  // EXTENSION: MARKDOWN PREVIEW ENHANCED
-  // ============================================================================
-  "markdown-preview-enhanced.chromePath": "/run/current-system/sw/bin/brave",
-  "markdown-preview-enhanced.codeBlockTheme": "dark.css",
-  "markdown-preview-enhanced.enableCriticMarkupSyntax": true,
-  "markdown-preview-enhanced.enableExtendedTableSyntax": true,
-  "markdown-preview-enhanced.mermaidTheme": "dark",
-  "markdown-preview-enhanced.previewColorScheme": "systemColorScheme",
-  "markdown-preview-enhanced.revealjsTheme": "black.css",
-  "markdown-preview-enhanced.previewTheme": "atom-dark.css",
-  "markdown-preview-enhanced.usePandocParser": true,
-  "markdown-preview-enhanced.latexEngine": "xelatex",
-  "markdown-preview-enhanced.mathRenderingOption": "MathJax",
 
   // ============================================================================
   // EXTENSION: LIVE SERVER
@@ -459,13 +481,6 @@
   // EXTENSION: DRAWIO
   // ============================================================================
   "hediet.vscode-drawio.resizeImages": null,
-
-  // ============================================================================
-  // EXTENSION: CHAT & AI
-  // ============================================================================
-  "chat.commandCenter.enabled": false,
-  "continue.telemetryEnabled": false,
-  "continue.enableTabAutocomplete": false,
 
   // ============================================================================
   // LAUNCH CONFIGURATION
@@ -483,30 +498,4 @@
   "typos.diagnosticSeverity": "Hint",
   "typos.path": "/run/current-system/sw/bin/typos-lsp",
 
-  "qt-core.additionalQtPaths": [
-    {
-      "name": "Qt-6.10.1-linux-g++_from_PATH",
-      "path": "/run/current-system/sw/bin/qtpaths",
-    },
-  ],
-  "plantuml.exportFormat": "svg",
-  "plantuml.java": "",
-  "plantuml.render": "Local",
-  "plantuml.urlFormat": "svg",
-  "yaml.schemas": {
-    "file:///nix/store/ni2sg0f5f7s5sqfmg6cgy1pw2v4zxmis-vscode-extensions/share/vscode/extensions/Continue.continue/config-yaml-schema.json": [
-      ".continue/**/*.yaml",
-    ],
-    "file:///nix/store/gkaz3vjn2yjvf3had4a3dn9lrjbcwg7n-vscode-extensions/share/vscode/extensions/Continue.continue/config-yaml-schema.json": [
-      ".continue/**/*.yaml",
-    ],
-    "file:///nix/store/3hv4svj1agahfmhzkmsgr8ppc60sjjdp-vscode-extensions/share/vscode/extensions/Continue.continue/config-yaml-schema.json": [
-      ".continue/**/*.yaml",
-    ],
-  },
-  "markdown-preview-enhanced.plantumlJarPath": "/run/current-system/sw/lib/plantuml.jar",
-  "[markdown]": {
-    "editor.defaultFormatter": "DavidAnson.vscode-markdownlint",
-  },
-  "plantuml.jar": "/run/current-system/sw/lib/plantuml.jar",
 }
