@@ -9,7 +9,6 @@
 let
   secrets = import ../Sec/secrets.nix;
   unstable = import <unstable> { config.allowUnfree = true; };
-
 in
 {
   services.ollama = {
@@ -87,8 +86,8 @@ in
     }
   ];
 
-  # environment.systemPackages = with pkgs; [
-  #   opencode
-  # ];
+  environment.systemPackages = with pkgs; [
+    unstable.opencode
+  ];
 
 }
