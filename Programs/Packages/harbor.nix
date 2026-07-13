@@ -2,10 +2,10 @@
 
 let
   # Define the absolute path to your project directory
-  projectDir = /home/masrkai/Documents/Personal/Projects/Harbor;
+  projectDir = /home/masrkai/Documents/Personal/Projects/Harper;
 in
 rustPlatform.buildRustPackage {
-  pname   = "harbor";
+  pname   = "harper";
   version = "0.1.0";
 
   # 1. Point src to the absolute project directory
@@ -26,6 +26,6 @@ rustPlatform.buildRustPackage {
 
     # ⚠️ NOTE: Rust binaries are usually lowercase.
     # Change this to "harbor" unless you explicitly named the binary "Harbor" in Cargo.toml
-    mainProgram = "harbor";
+    mainProgram = "harper";
   };
 }
