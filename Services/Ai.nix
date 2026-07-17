@@ -88,6 +88,7 @@ in
 
   environment.systemPackages = with pkgs; [
     unstable.opencode
+    # unstable.graphify
   ];
 
 }

@@ -81,11 +81,9 @@ in
         jax
         ollama
         litellm
-
         # torch
 
         #-> GUIs
-
         # pyqt6
         # pyside6
         # pyqt6-sip

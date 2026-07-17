@@ -12,9 +12,10 @@ in {
       monolith
     ])
     ++
-    (with unstable.pkgs; [
+    (with pkgs; [
       typst
-      (texliveMedium.withPackages (ps: with ps; [ fontspec ]))
+      # miktex
+      python313Packages.panflute
 
       pandoc
       pandoc-include
@@ -24,7 +25,7 @@ in {
     ]);
 
   environment.variables = {
-    PLANTUML_JAR = "${unstable.pkgs.plantuml}/lib/plantuml.jar";
-    PANDOC_DIAGRAM_FILTER = "${unstable.pkgs.pandoc-ext-diagram}/diagram.lua";
+    PLANTUML_JAR = "${pkgs.plantuml}/lib/plantuml.jar";
+    PANDOC_DIAGRAM_FILTER = "${pkgs.pandoc-ext-diagram}/diagram.lua";
   };
 }
