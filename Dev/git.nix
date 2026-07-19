@@ -2,17 +2,15 @@
 { lib, config, pkgs, ... }:
 
 let
-  secrets = import ../Sec/secrets.nix;
-
   # Hardware-specific git configs
   gitConfigs = {
     isAsusTuf = {
       name = "Masrkai";
-      email = secrets.Masrkai_GitHub_Mail;
+      email = config.identity.secrets.Masrkai_GitHub_Mail;
     };
     isDellG15 = {
       name = "maryam-othmann5";
-      email = secrets.Maryam_GitHub_Mail;
+      email = config.identity.secrets.Maryam_GitHub_Mail;
     };
   };
 

@@ -1,10 +1,5 @@
 { lib, ... }:
 
-let
-  secrets = import ../../Sec/secrets.nix;
-
-in
-
 lib.mkMerge [
     {
         networking.networkmanager.ensureProfiles.profiles = {

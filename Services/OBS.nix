@@ -1,9 +1,5 @@
 { config, lib, pkgs, ... }:
 
-let
-  secrets = import ../Sec/secrets.nix;
-in
-
 {
     programs.obs-studio = {
     enable = true;

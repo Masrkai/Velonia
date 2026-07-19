@@ -1,8 +1,6 @@
 { config, lib, pkgs, modulesPath, ... }:
 
 let
-  secrets = import ./Sec/secrets.nix;
-
   customPackages = {
     #? .Nix
     lm-studio = pkgs.callPackage ./Programs/Packages/lm-studio.nix {};
@@ -53,7 +51,8 @@ in
     ];
 
 
-  time.timeZone = secrets.TZ;
+  time.timeZone = config.identity.secrets.TZ;
+  identity.secrets = import ./Sec/secrets.nix;
   i18n={
     #? Select internationalisation properties.
     defaultLocale = "en_US.UTF-8";

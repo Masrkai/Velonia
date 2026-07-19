@@ -1,9 +1,7 @@
 { config, pkgs, ... }:
 
 
-let
-  secrets = import ../../../Sec/secrets.nix;
-in{
+{
   services.minio = {
     enable = true;
 

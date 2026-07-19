@@ -2,7 +2,7 @@
 { lib, config, pkgs, ... }:
 
 let
-  secrets = import ../Sec/secrets.nix;
+  localSecrets = import ../Sec/secrets.nix;
 
   # Global configuration - change this path if needed
   hardwareConfigFile = "/etc/nixos/Sec/hardware-detected.nix";
@@ -25,14 +25,20 @@ in {
     identity = {
       username = lib.mkOption {
         type = lib.types.str;
-        default = secrets.username;
+        default = localSecrets.username;
         description = "Primary username for the system";
       };
 
       hostname = lib.mkOption {
         type = lib.types.str;
-        default = secrets.hostname;
+        default = localSecrets.hostname;
         description = "System hostname";
+      };
+
+      secrets = lib.mkOption {
+        type = lib.types.raw;
+        default = localSecrets;
+        description = "Sensitive configuration values from Sec/secrets.nix";
       };
     };
 

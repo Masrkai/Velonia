@@ -6,9 +6,6 @@
   ...
 }:
 
-let
-  secrets = import ../Sec/secrets.nix;
-in
 {
   services.ollama = {
     enable = true;
@@ -38,7 +35,7 @@ in
     host = "127.0.0.1";
     openFirewall = true;
     environment = {
-      TZ = secrets.TZ;
+      TZ = config.identity.secrets.TZ;
       WEBUI_AUTH = "False";
       DATA_DIR = "/var/lib/open-webui/data"; # Explicitly set data directory
       OLLAMA_BASE_URL = "http://127.0.0.1:11434"; # Redundant but sometimes helps

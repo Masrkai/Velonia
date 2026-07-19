@@ -1,8 +1,5 @@
 { pkgs, ... }:
 
-let
-  secrets = import ../Sec/secrets.nix;
-in
 {
 
   # Set regulatory domain

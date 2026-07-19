@@ -1,10 +1,5 @@
 { config, lib, pkgs, ... }:
 
-let
-  secrets = import ../Sec/secrets.nix;
-in
-
-
 {
   #---> SearXNG
 
@@ -99,7 +94,7 @@ in
           port = 8880;
           bind_address = "127.0.0.1";
           base_url = "http://localhost/";
-          secret_key = secrets.searx-secret-key;
+          secret_key = config.identity.secrets.searx-secret-key;
           limiter = true;  # Enable rate limiting
           ratelimit_low = 30;
           ratelimit_high = 50;

@@ -1,8 +1,5 @@
 { config, lib, pkgs, modulesPath, ... }:
 
-let
-  secrets = import ./Sec/secrets.nix;
-in
 {
   nix = {
     settings = {

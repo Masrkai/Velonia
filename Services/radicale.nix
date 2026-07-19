@@ -1,9 +1,6 @@
 # PowerManagement.nix
 { lib, config, pkgs, ... }:
 
-let
-  secrets = import ../Sec/secrets.nix;
-in
 {
 
   #! you need to run the following command manually:

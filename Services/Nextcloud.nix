@@ -1,14 +1,9 @@
 { config, lib, pkgs, ... }:
 
-let
-  secrets = import ../Sec/secrets.nix;
-in
-
-
 {
 
   #--> NextCloud
-  environment.etc."nextcloud-admin-pass".text = secrets.nextcloud-admin-pass;
+  environment.etc."nextcloud-admin-pass".text = config.identity.secrets.nextcloud-admin-pass;
   services.nextcloud = {
     enable = false;
     package = pkgs.nextcloud30;

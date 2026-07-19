@@ -1,11 +1,9 @@
-let
-  secrets = import ../Sec/secrets.nix;
-in
+{ tz }:
 {
   image = "ghcr.io/open-webui/open-webui:ollama";
 
   environment = {
-    "TZ" = secrets.TZ;
+    "TZ" = tz;
 
     "USE_CUDA_DOCKER" = "True";
 

@@ -1,9 +1,5 @@
 { config, pkgs, lib, ... }:
 
-let
-   secrets = import ./../../Sec/secrets.nix;
-in
-
 {
 
    services.gns3-server = {
@@ -15,7 +11,7 @@ in
         user = config.identity.username;
           passwordFile = pkgs.writeTextFile {
           name = "gns3_password";
-          text = secrets.gns3_password;
+          text = config.identity.secrets.gns3_password;
           };
       };
 
