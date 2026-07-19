@@ -1,13 +1,5 @@
 { pkgs, ... }:
 
-let
-  unstable = import <unstable> {
-    config.allowUnfree = true;
-    # config.allowBroken = true;
-    };
-
-in
-
 {
 
   python-nixpkgs-extensions = with pkgs.vscode-extensions; [

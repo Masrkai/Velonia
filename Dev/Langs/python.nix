@@ -1,15 +1,5 @@
 { pkgs, ... }:
 
-let
-  unstable = import <unstable> {
-    config.allowUnfree = true;
-    # config.allowBroken = true;
-    };
-
-
-
-in
-
 {
 
    environment.systemPackages = with pkgs; [

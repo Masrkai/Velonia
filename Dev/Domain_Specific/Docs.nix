@@ -1,8 +1,6 @@
 { pkgs, ... }:
 
-let
-  unstable = import <unstable> { config.allowUnfree = true; };
-in {
+{
   environment.systemPackages =
     (with pkgs; [
       doxygen

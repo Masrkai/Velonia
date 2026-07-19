@@ -1,7 +1,6 @@
 { config, lib, pkgs, modulesPath, ... }:
 
 let
-  unstable = import <unstable> {config.allowUnfree = true;};
   secrets = import ./Sec/secrets.nix;
 
   customPackages = {
@@ -39,6 +38,7 @@ in
 {
     imports = [
       ./control-hardware.nix
+      ./nix-system.nix
 
 
       ./desktop.nix
@@ -142,93 +142,7 @@ in
   #! Diable flatpack
   services.flatpak.enable = lib.mkForce false;
 
-  nix = {
-  settings = {
-      experimental-features = [
-        #"flakes"
-        "nix-command"
-      ];
 
-      cores = 12;                       # Restrict builds to use only N cores 0 to use all.
-      max-jobs = 4;                     # Limit the number of parallel build jobs.
-      sandbox = true;                   # Enable sandboxing if not already enabled (it helps isolate builds).
-      builders-use-substitutes = true;  # Prefer cached builds
-      system-features = [ "big-parallel" "kvm" ];
-
-      trusted-users =[
-        "root"
-        "@wheel"
-        "masrkai"
-      ];
-
-      # Keep fewer generations to reduce memory pressure
-      keep-derivations = false;
-      keep-outputs = false;
-    };
-
-  };
-
-  nixpkgs = {
-    overlays = [
-      (final: prev: {
-        # Rest of your existing configurations
-        filterOutX11 = prev.lib.filterAttrs (name: pkg:
-          !(final.lib.strings.contains "libX11" (toString pkg) ||
-            final.lib.strings.contains "xset" (toString pkg) ||
-            final.lib.strings.contains "x11-utils" (toString pkg)))
-          prev;
-
-        jackett = prev.jackett.overrideAttrs (oldAttrs: {
-          doCheck = false;
-        });
-
-        wine = prev.wineWowPackages.stableFull.override {
-          x11Support = false;
-          cupsSupport = false;
-          waylandSupport = true;
-        };
-
-
-        ffmpeg = prev.ffmpeg.override {
-          withWhisper    = false;
-          withSvtav1     = true;
-          withAom        =true;
-          withTensorflow = false;
-
-          withMetal = false; # Use Metal API on Mac. Unfree and requires manual downloading of files
-          withMfx = false; # Hardware acceleration via the deprecated intel-media-sdk/libmfx. Use oneVPL instead (enabled by default) from Intel's oneAPI.
-
-          # withFrei0r    = false;
-        };
-
-
-        ffmpeg-full = prev.ffmpeg-full.override {
-          withWhisper    = false;
-          withSvtav1     = true;
-          withAom        =true;
-          withTensorflow = false;
-
-          withMetal = false; # Use Metal API on Mac. Unfree and requires manual downloading of files
-          withMfx = false; # Hardware acceleration via the deprecated intel-media-sdk/libmfx. Use oneVPL instead (enabled by default) from Intel's oneAPI.
-
-          # withFrei0r    = false;
-        };
-
-      })
-    ];
-    #-------------------------------------------------------------------->
-    config = {
-      allowUnfree = true;
-      # allowBroken = true; #! don't enable in production no matter what
-
-      permittedInsecurePackages = [
-        "ciscoPacketTracer8-8.2.2"
-        "minio-2025-10-15T17-29-55Z"
-        # "qtwebengine-5.15.19"
-
-      ];
-    };
-  };
 
 
 
@@ -240,7 +154,7 @@ in
 ffmpeg-full
 
   #-> Custom
-  unstable.grayjay
+  pkgs.grayjay
   customPackages.logisim-evolution
 
   kitty
@@ -318,7 +232,7 @@ ffmpeg-full
   amberol
   qbittorrent
 
-  unstable.ani-cli
+  pkgs.ani-cli
     mpv               #! Needed for ani-cli operation
 
 
@@ -343,7 +257,7 @@ ffmpeg-full
 
   #-> Maintenance Utilities
   gparted #!has issues
-  unstable.qdiskinfo
+  pkgs.qdiskinfo
   gnome-disk-utility
 
   #-> System Utilities

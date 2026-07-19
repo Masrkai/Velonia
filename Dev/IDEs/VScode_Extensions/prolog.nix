@@ -1,13 +1,5 @@
 { pkgs, ... }:
 
-let
-  unstable = import <unstable> {
-    config.allowUnfree = true;
-    # config.allowBroken = true;
-    };
-
-in
-
 {
 
   prolog-nixpkgs-extensions = with pkgs.vscode-extensions; [

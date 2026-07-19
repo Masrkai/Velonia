@@ -1,16 +1,6 @@
 {pkgs, config, ... }:
 
-let
-
-  unstable = import <unstable> {
-    # config.allowUnfree = true;
-    config = config.nixpkgs.config;
-    overlays = [];
-    };
-
-
-in{
-
+{
   environment.systemPackages = with pkgs; [
     nixd
     nixfmt
@@ -19,7 +9,7 @@ in{
     direnv
     nix-tree
     nix-init
-    unstable.nixoscope
+    pkgs.nixoscope
     nix-direnv
     nix-eval-jobs
     nix-output-monitor

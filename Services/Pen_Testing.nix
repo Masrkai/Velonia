@@ -1,8 +1,6 @@
 { config, lib, pkgs, modulesPath, ... }:
 
 let
-  unstable = import <unstable> {config.allowUnfree = true;};
-
   customPackages = {
     #? Java
     jsql        = pkgs.callPackage ../Programs/Packages/jsql.nix {};
@@ -95,12 +93,12 @@ in
         lighttpd
 
         #> Memory
-        unstable.pince
+        pkgs.pince
 
         #> Exploitation
         # armitage
         exploitdb
-        unstable.metasploit
+        pkgs.metasploit
         armitage
 
         #> SQL

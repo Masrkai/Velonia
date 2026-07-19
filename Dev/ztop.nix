@@ -5,7 +5,6 @@
     # ./cpp_env.nix
 
     ./git.nix
-    ./overlays.nix
     ./nix-ld.nix
 
     ./Langs/ztop.nix

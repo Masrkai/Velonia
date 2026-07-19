@@ -8,12 +8,11 @@
 
 let
   secrets = import ../Sec/secrets.nix;
-  unstable = import <unstable> { config.allowUnfree = true; };
 in
 {
   services.ollama = {
     enable = true;
-    package = unstable.ollama-cuda;
+    package = pkgs.ollama-cuda;
 
     port = 11434;
     host = "127.0.0.1";
@@ -87,9 +86,8 @@ in
   ];
 
   environment.systemPackages = with pkgs; [
-    unstable.opencode
-    unstable.pi-coding-agent
-    # unstable.graphify
+    pkgs.opencode
+    pkgs.pi-coding-agent
   ];
 
 }

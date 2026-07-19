@@ -1,7 +1,6 @@
 { config, lib, pkgs, ... }:
 
 let
-  unstable = import <unstable> {config.allowUnfree = true;};
   secrets = import ../Sec/secrets.nix;
 in
 
