@@ -1,7 +1,7 @@
 { config, lib, pkgs, modulesPath, ... }:
 
 let
-  username = "masrkai";
+  username = config.identity.username;
 
   # Copy files into the Nix store instead of reading them
   configFiles = {

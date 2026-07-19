@@ -21,7 +21,7 @@ in
     group = "ollama";
 
     environmentVariables = {
-      OLLAMA_MODELS = "/home/masrkai/AI";
+      OLLAMA_MODELS = "/home/${config.identity.username}/AI";
     };
   };
 

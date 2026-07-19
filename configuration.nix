@@ -122,7 +122,7 @@ in
       };
   };
 
-    users.users.masrkai = {
+    users.users.${config.identity.username} = {
         isNormalUser = true;
         description = "Masrkai";
         extraGroups = [

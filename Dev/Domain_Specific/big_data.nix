@@ -1,4 +1,4 @@
-{ pkgs, lib, ... }:
+{ config, pkgs, lib, ... }:
 
 {
   environment.systemPackages = with pkgs; [
@@ -125,5 +125,5 @@
     { domain = "*"; type = "hard"; item = "nofile"; value = "65536"; }
   ];
 
-  users.users.masrkai.extraGroups = [ "hadoop" ];
+  users.users.${config.identity.username}.extraGroups = [ "hadoop" ];
 }

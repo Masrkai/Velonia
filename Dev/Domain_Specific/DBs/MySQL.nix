@@ -2,7 +2,7 @@
 
 let
   USER_NAME = {
-    user     = "masrkai";
+    user     = config.identity.username;
   };
 in {
   services.mysql = {

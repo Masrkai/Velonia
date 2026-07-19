@@ -19,7 +19,7 @@ in
       trusted-users = [
         "root"
         "@wheel"
-        "masrkai"
+        config.identity.username
       ];
 
       keep-derivations = false;

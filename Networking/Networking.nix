@@ -1,4 +1,4 @@
-{ pkgs, lib, ... }:
+{ config, pkgs, lib, ... }:
 
 #*#########################
 #* Networking-Configuration:
@@ -26,7 +26,7 @@
 
   networking = {
     useDHCP = lib.mkDefault true;
-    hostName = "NixOS";
+    hostName = config.identity.hostname;
     enableIPv6 = false;
     nftables.enable = true;
     usePredictableInterfaceNames = false;

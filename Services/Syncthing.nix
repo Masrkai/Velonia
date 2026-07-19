@@ -5,9 +5,9 @@
   #---> Syncthing
   services.syncthing = {
         enable = true;
-        user = "masrkai";
-        dataDir = "/home/masrkai";
-        configDir = "/home/masrkai/.config/syncthing";
+        user = config.identity.username;
+        dataDir = "/home/${config.identity.username}";
+        configDir = "/home/${config.identity.username}/.config/syncthing";
 
     guiAddress = "127.0.0.1:8384";
     systemService = true;

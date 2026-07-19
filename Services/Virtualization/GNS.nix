@@ -12,7 +12,7 @@ in
 
       auth = {
         enable = false;
-        user = "masrkai";
+        user = config.identity.username;
           passwordFile = pkgs.writeTextFile {
           name = "gns3_password";
           text = secrets.gns3_password;

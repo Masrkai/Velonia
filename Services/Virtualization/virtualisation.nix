@@ -20,7 +20,7 @@ in
       lib.mkIf config.virtualisation.libvirtd.enable
         (builtins.listToAttrs (map (g: {
           name = g;
-          value.members = [ "masrkai" ];
+          value.members = [ config.identity.username ];
         }) virtualizationGroups));
 
     #--> Qemu KVM & VirtualBox

@@ -1,7 +1,9 @@
-# ID.nix - Simple hardware detection with global config
+# ID.nix - Hardware detection & identity config
 { lib, config, pkgs, ... }:
 
 let
+  secrets = import ../Sec/secrets.nix;
+
   # Global configuration - change this path if needed
   hardwareConfigFile = "/etc/nixos/Sec/hardware-detected.nix";
   
@@ -10,6 +12,20 @@ let
 
 in {
   options = {
+    identity = {
+      username = lib.mkOption {
+        type = lib.types.str;
+        default = secrets.username;
+        description = "Primary username for the system";
+      };
+
+      hostname = lib.mkOption {
+        type = lib.types.str;
+        default = secrets.hostname;
+        description = "System hostname";
+      };
+    };
+
     hardware = {
       isAsusTuf = lib.mkOption {
         type = lib.types.bool;
