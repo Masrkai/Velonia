@@ -17,10 +17,27 @@
   libxkbcommon,
   libxml2_13,
   libxslt,
+  libice,
+  libsm,
+  libx11,
+  libxcb,
+  libxcb-image,
+  libxcb-keysyms,
+  libxcb-render-util,
+  libxcb-wm,
+  libxcomposite,
+  libxcursor,
+  libxdamage,
+  libxext,
+  libxfixes,
+  libxi,
+  libxrandr,
+  libxrender,
+  libxscrnsaver,
+  libxtst,
   nspr,
   nss,
   wayland,
-  xorg,
   buildFHSEnv,
   copyDesktopItems,
   makeDesktopItem,
@@ -77,27 +94,25 @@ let
       nspr
       nss
       wayland
-    ]
-    ++ (with xorg; [
-      libICE
-      libSM
-      libX11
-      libXScrnSaver
-      libXcomposite
-      libXcursor
-      libXdamage
-      libXext
-      libXfixes
-      libXi
-      libXrandr
-      libXrender
-      libXtst
+      libice
+      libsm
+      libx11
+      libxscrnsaver
+      libxcomposite
+      libxcursor
+      libxdamage
+      libxext
+      libxfixes
+      libxi
+      libxrandr
+      libxrender
+      libxtst
       libxcb
-      xcbutilimage
-      xcbutilkeysyms
-      xcbutilrenderutil
-      xcbutilwm
-    ]);
+      libxcb-image
+      libxcb-keysyms
+      libxcb-render-util
+      libxcb-wm
+    ];
 
     unpackPhase = ''
       runHook preUnpack
