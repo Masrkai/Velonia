@@ -9,8 +9,27 @@ let
     lm-studio = pkgs.callPackage ./Programs/Packages/lm-studio.nix {};
     logisim-evolution = pkgs.callPackage ./Programs/Packages/logisim-evolution.nix {};
     super-productivity = pkgs.callPackage ./Programs/Packages/super-productivity.nix {};
-    harper = pkgs.callPackage ./Programs/Packages/harbor.nix {};
     vera = pkgs.callPackage Programs/masrkai-built/vera.nix {};
+
+
+    # # harper = pkgs.callPackage ./Programs/Packages/harbor.nix {};
+    # harper = pkgs.callPackage (fetchFromGitHub {
+    #   owner = "Masrkai";
+    #   repo = "Harper";
+    #   rev = "3ae33ba533d4a750cdcf0d8d1da59999d6168e83";
+    #   # hash = "";  # run once, copy hash from error, then add
+    # }) { };
+
+    # harper = let
+    #   harperSrc = pkgs.fetchFromGitHub {
+    #     owner = "Masrkai";
+    #     repo  = "Harper";
+    #     rev   = "3ae33ba533d4a750cdcf0d8d1da59999d6168e83";
+    #     hash  = "sha256-hakvoMKgxKjjsxzMsf9ibyRyZm8LZD7x8TIaX+JtT0M=";
+    #     # hash  = lib.fakeHash;   # replace with real hash after first build error
+    #   };
+    # in pkgs.callPackage "${harperSrc}/default.nix" { src = harperSrc; };
+
 
     #>! Binary / FHSenv
     # proton-ge-bin = pkgs.callPackage ./Programs/Packages/proton-ge-bin.nix {};
@@ -373,7 +392,7 @@ ffmpeg-full
 
 
   btrfs-progs
-  customPackages.harper
+  # customPackages.harper
   customPackages.vera
 
 ];
