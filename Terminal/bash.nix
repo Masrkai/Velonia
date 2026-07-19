@@ -24,7 +24,7 @@ let
     ./Functions/listfonts.sh
     ./Functions/journalctl.sh
     ./Functions/sector_copy.sh
-    ./Functions/yt_downlaoder.sh
+    ./Functions/yt_downloader.sh
     ./Functions/ani-cli-batch.sh
     ./Functions/usb_power_map.sh
     ./Functions/nixos_specific.sh
