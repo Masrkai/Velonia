@@ -138,7 +138,7 @@ in
       };
 
 
-  #! Diable flatpack
+  #! Disable flatpack
   services.flatpak.enable = lib.mkForce false;
 
 
@@ -194,7 +194,7 @@ ffmpeg-full
   arduino-ide
   arduino-core
 
-  #-> Benshmarking
+  #-> Benchmarking
   furmark
 
 
