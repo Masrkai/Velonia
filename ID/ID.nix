@@ -6,11 +6,21 @@ let
 
   # Global configuration - change this path if needed
   hardwareConfigFile = "/etc/nixos/Sec/hardware-detected.nix";
-  
+
   # Path to the detection script
   detectScript = ./detect-hardware.sh;
 
 in {
+
+  imports=[
+      # Auto-import the generated hardware config
+    (if builtins.pathExists /etc/nixos/Sec/hardware-detected.nix
+    then /etc/nixos/Sec/hardware-detected.nix
+    else {})
+
+  ];
+
+
   options = {
     identity = {
       username = lib.mkOption {

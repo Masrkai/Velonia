@@ -18,14 +18,6 @@
   imports =
     [
       ./hardware-configuration.nix
-
-
-
-      ./ID/ID.nix
-      # Auto-import the generated hardware config (will be created after first boot)
-      (if builtins.pathExists /etc/nixos/Sec/hardware-detected.nix
-      then /etc/nixos/Sec/hardware-detected.nix
-      else {})
     ];
 
   boot = {

@@ -37,8 +37,8 @@ let
 in
 {
     imports = [
-      ./control-hardware.nix
       ./nix-system.nix
+      ./control-hardware.nix
 
 
       ./desktop.nix
