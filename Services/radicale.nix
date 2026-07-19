@@ -1,4 +1,4 @@
-# PowerManagement.nix
+# radicale.nix
 { lib, config, pkgs, ... }:
 
 {

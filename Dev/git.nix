@@ -1,4 +1,4 @@
-# PowerManagement.nix
+# git.nix
 { lib, config, pkgs, ... }:
 
 let
