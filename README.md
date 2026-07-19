@@ -1,8 +1,8 @@
-# NixOS Configuration ❄️
+# NixOS Configuration
 
 ![NixOS](https://img.shields.io/badge/-NixOS-5277C3?style=flat-square&logo=nixos&logoColor=black) ![Nix](https://img.shields.io/badge/-Nix-7EBAFF?style=flat-square&logo=nixos&logoColor=black)
 
-A personal NixOS system configuration built over time, targeting a daily-driver laptops environment with a heavy emphasis on:
+A personal NixOS configuration for daily-driver laptops, built over time with an emphasis on:
 
 - security
 - network privacy
@@ -12,8 +12,8 @@ A personal NixOS system configuration built over time, targeting a daily-driver 
 
 The configuration is declarative throughout, everything is expressed in Nix, with secrets kept in an excluded `Sec/` directory.
 
-> **Started**: 10/11/2023
-> **Last reviewed:** 16/06/2026 (DD/MM/YYYY)
+> **Started**: 10/11/2023 (DD/MM/YYYY)
+> **Last reviewed:** 19/07/2026 (DD/MM/YYYY)
 
 ---
 
@@ -75,7 +75,7 @@ The systems runs NVIDIA GPUs in [graphics.nix](graphics.nix)
 
 KDE Plasma 6 runs on Wayland via SDDM with the KWin compositor. X.Org server is explicitly disabled (`services.xserver.enable = lib.mkForce false`). `programs.xwayland` remains enabled for applications that do not yet support Wayland natively.
 
-Several XDG portals are configured in parallel — GTK, GNOME, and KDE — so both GTK and Qt applications get proper file-picker and screen-share integration.
+Several XDG portals are configured in parallel (GTK, GNOME, KDE) so both GTK and Qt applications get proper file-picker and screen-share integration.
 
 Notable environment variables: `NIXOS_OZONE_WL=1` enables Ozone Wayland for Chromium-based apps, `QT_QPA_PLATFORM="wayland;xcb"` allows Qt to fall back to XCB when Wayland is unavailable, and `GSK_RENDERER=nvidia` nudges GTK4's scene graph toward the NVIDIA backend.
 
@@ -85,7 +85,7 @@ KWallet PAM integration is disabled (`security.pam.services.sddm.kwallet.enable 
 
 ## Networking
 
-The networking stack is layered deliberately: DNS resolution is isolated, encrypted, and cached independently of the system resolver.
+DNS resolution is isolated from the system resolver through three separate layers, with encryption and caching at each stage.
 
 ### DNS Architecture
 
@@ -95,10 +95,10 @@ Resolution flows through three hops.
 Application
     │
     ▼
-Unbound  (127.0.0.1:53)   — DNSSEC validation, caching, ad-blocking
+Unbound  (127.0.0.1:53)   - DNSSEC validation, caching, ad-blocking
     │  forward-zone "."
     ▼
-dnscrypt-proxy  (127.0.0.1:5354)   — DNS-over-HTTPS / DNSCrypt
+dnscrypt-proxy  (127.0.0.1:5354)   - DNS-over-HTTPS / DNSCrypt
     │  server_names: cloudflare, google, quad9, mullvad
     ▼
 Upstream resolver
@@ -112,7 +112,7 @@ Upstream resolver
 
 ### Time Synchronization
 
-`systemd-timesyncd` is disabled and replaced with **chrony** with NTS (Network Time Security) using `time.cloudflare.com`. NTS authenticates time packets cryptographically, preventing spoofing.
+`systemd-timesyncd` is disabled and replaced with **chrony** with NTS (Network Time Security) using `time.cloudflare.com`. NTS authenticates time packets cryptographically so they cannot be spoofed.
 
 ### Firewall
 
@@ -125,8 +125,8 @@ The firewall is handled by `nftables` (enabled via `networking.nftables.enable =
 - UDP 67/68: DHCP (for hotspot mode)
 - UDP 6881: qBittorrent (will be removed after some research)
 - UDP 21027: Syncthing discovery
-- TCP/UDP 1714–1764: KDE Connect
-- TCP/UDP 21114–21119: RustDesk
+- TCP/UDP 1714-1764: KDE Connect
+- TCP/UDP 21114-21119: RustDesk
 
 `fail2ban` is enabled. Refused packets, reverse-path drops, and refused connections are all logged.
 
@@ -138,7 +138,7 @@ OpenVPN uses `openvpn3` with systemd-resolved integration disabled (since the sy
 
 ### Kernel Network Parameters
 
-`Networking/hardening/Network_Kernel_Parameters.nix` sets a comprehensive set of `boot.kernel.sysctl` values. Key decisions:
+`Networking/hardening/Network_Kernel_Parameters.nix` sets `boot.kernel.sysctl` values across several categories. Key decisions:
 
 TCP congestion control is set to **BBR** with the `fq` qdisc, which provides better throughput on lossy or high-latency links. TCP buffer sizes are raised to 16 MB maximum. MPTCP (Multipath TCP) is enabled for potential throughput gains on multi-interface setups. IPv6 is disabled system-wide. Reverse-path filtering is set to loose mode (value 2) on all interfaces, which prevents obvious spoofing while remaining compatible with asymmetric routing that hotspot/bridging setups produce. SYN cookie protection is enforced, and TCP keepalive probes are set aggressively (60 s idle, 10 s interval, 6 probes) to detect dead connections quickly.
 
@@ -154,7 +154,7 @@ Each language has its own file under `Dev/Langs/` and is imported by `Dev/Langs/
 
 **C++** (`Dev/Langs/cpp.nix`) installs GCC 14 at high priority alongside LLVM/Clang 20, CMake, Ninja, pkg-config, GTest, GTK3/4, Qt base and tools, Eigen, nlohmann_json, and BPF tooling. The high-priority markers avoid library path collisions between GCC and Clang toolchains. A separate `Dev/cpp_env.nix` exists (currently commented out in `Dev/ztop.nix`) that sets `CC`/`CXX`/`CPLUS_INCLUDE_PATH`/`LIBRARY_PATH` environment variables for projects that rely on those rather than CMake's detection logic.
 
-**Python** (`Dev/Langs/python.nix`) provides a system-wide `python312` environment with an extensive package set covering GUI (PyQt6, PySide6, raylib), data (pandas, OpenCV, JAX, ONNX), networking (netutils, Selenium), databases (SQLite, pymysql), packaging (PyInstaller), and Jupyter/IPython infrastructure. The package set is installed with `lib.lowPrio` so it does not conflict with project-specific virtual environments. `ruff` and `ffmpeg-full` (with Whisper support disabled to reduce closure size) are installed at normal priority.
+**Python** (`Dev/Langs/python.nix`) provides a system-wide `python312` environment with packages covering GUI (PyQt6, PySide6, raylib), data (pandas, OpenCV, JAX, ONNX), networking (netutils, Selenium), databases (SQLite, pymysql), packaging (PyInstaller), and Jupyter/IPython infrastructure. The package set is installed with `lib.lowPrio` so it does not conflict with project-specific virtual environments. `ruff` and `ffmpeg-full` (with Whisper support disabled to reduce closure size) are installed at normal priority.
 
 **Rust** (`Dev/Langs/rust.nix`) installs the compiler, Cargo, Clippy, rustfmt, rust-analyzer, and cargo-flamegraph for profiling.
 
@@ -182,11 +182,11 @@ Each language has its own file under `Dev/Langs/` and is imported by `Dev/Langs/
 
 **Pandoc** (`Dev/Domain_Specific/Pandoc.nix`) pulls from the unstable channel to get a newer release. It installs Pandoc, `pandoc-include`, `pandoc-ext-diagram`, Typst (noted as not fully working), and a `texliveMedium` with the `fontspec` package. Environment variables `PLANTUML_JAR` and `PANDOC_DIAGRAM_FILTER` are set globally so Pandoc diagram filters can locate their dependencies without per-project configuration.
 
-### IDE — VSCodium
+### IDE: VSCodium
 
-`Dev/IDEs/vscodium.nix` configures VSCodium (the telemetry-free VS Code build) with a curated extension set assembled from both nixpkgs and the VS Code Marketplace.
+`Dev/IDEs/vscodium.nix` configures VSCodium (the telemetry-free VS Code build) with an extension set assembled from both nixpkgs and the VS Code Marketplace.
 
-Extensions are split across per-language files under `Dev/IDEs/VScode_Extensions/` to keep the main configuration manageable. Each file exports two lists — `*-nixpkgs-extensions` and `*-marketplace-extensions` — which are concatenated in `vscodium.nix`.
+Extensions are split across per-language files under `Dev/IDEs/VScode_Extensions/` to keep the main configuration manageable. Each file exports two lists (`*-nixpkgs-extensions` and `*-marketplace-extensions`) which are concatenated in `vscodium.nix`.
 
 The settings file (`Dev/IDEs/vscode_config.jsonc`) is copied into `~/.config/VSCodium/User/settings.json` via a `system.userActivationScripts` entry, so the editor configuration is managed declaratively without home-manager.
 
@@ -198,11 +198,11 @@ The settings file (`Dev/IDEs/vscode_config.jsonc`) is copied into `~/.config/VSC
 
 Overridden packages include: `torch` → `torch-bin`, `torchaudio` → `torchaudio-bin`, `torchvision` → `torchvision-bin`, `jaxlib` → `jaxlib-bin` (all preferring pre-built binaries to avoid hours-long compilation), plus custom derivations for `unsloth`, `unsloth-zoo`, `flash-attn`, `vllm`, `xformers`, `smolagents`, `trl`, `tyro`, `datasets`, `huggingface-hub`, `hf-xet`, `cut-cross-entropy`, `keras`, `onnxruntime`, and `fairseq2`.
 
-`Programs/python-libs/` contains the actual derivations. Several require non-trivial patching:
+`Programs/python-libs/` contains the actual derivations. Several require nontrivial patching:
 
 `unsloth-zoo` requires `dos2unix` at build time because upstream ships CRLF line endings in Python source files, which break the Nix patcher. Patches remove the requirement for `sudo` at runtime, remove the circular import check that requires `unsloth` to be present before `unsloth-zoo` can import, and fix the `pyproject.toml` license field syntax to conform to PEP 621.
 
-`xformers` disables parallel building (`enableParallelBuilding = false`) and caps `MAX_JOBS=2` to prevent OOM during compilation. The build is memory-intensive: each concurrent xformers job can consume 4–8 GB of RAM.
+`xformers` disables parallel building (`enableParallelBuilding = false`) and caps `MAX_JOBS=2` to prevent OOM during compilation. The build is memory-intensive: each concurrent xformers job can consume 4 to 8 GB of RAM.
 
 `vllm` carries three patches: one to respect `cmakeFlags` passed from the Nix build environment, one to propagate `PYTHONPATH` to a subprocess that `vllm` spawns for model registry loading, and one to remove an `lsmod` call that fails in the sandbox. `vllm` also vendors several upstream libraries (cutlass, FlashMLA, vllm-flash-attn) via `fetchFromGitHub` rather than using FetchContent at build time, which is incompatible with the Nix sandbox.
 
@@ -220,7 +220,7 @@ Apache Tika OCR is defined but disabled. Podman is defined but disabled.
 
 ### Custom search engine
 
-**SearXNG** is enabled as a local metasearch engine on port 8880. It is configured with a curated engine list: Google, DuckDuckGo, Wikipedia, Wikidata, books (Goodreads, OpenLibrary, Anna's Archive), software (F-Droid, APKMirror, Void Linux, Apple App Store, CachyOS, Alpine packages), torrents (seven sources), wikis (multiple MediaWiki instances, Arch Linux wiki, Wikimedia Commons), and a handful of explicitly disabled engines (Bing, Brave). Engines are assigned shortcut numbers sequentially. The favicon and thumbnail proxy resolvers are enabled. NNSFW, OpenAI API, and evaluation arena features are disabled.
+**SearXNG** is enabled as a local metasearch engine on port 8880. Its engine list includes Google, DuckDuckGo, Wikipedia, Wikidata, books (Goodreads, OpenLibrary, Anna's Archive), software (F-Droid, APKMirror, Void Linux, Apple App Store, CachyOS, Alpine packages), torrents (seven sources), wikis (multiple MediaWiki instances, Arch Linux wiki, Wikimedia Commons), and a handful of explicitly disabled engines (Bing, Brave). Engines are assigned shortcut numbers sequentially. The favicon and thumbnail proxy resolvers are enabled. NNSFW, OpenAI API, and evaluation arena features are disabled.
 
 ### Gaming
 
@@ -230,7 +230,7 @@ Additional packages: Heroic (Epic/GOG launcher), DXVK, MangoHud, Winetricks, and
 
 ### Penetration Testing
 
-`Services/Pen_Testing.nix` installs a comprehensive set of tools grouped by purpose.
+`Services/Pen_Testing.nix` installs a set of tools grouped by purpose.
 
 ### Audio
 
@@ -270,7 +270,7 @@ Jackett runs as its own user on port 9117 (no firewall hole opened) to provide a
 
 ### Bash
 
-`Terminal/bash.nix` configures the system Bash shell using `programs.bash`. It sources a library of shell functions and sets a comprehensive alias table.
+`Terminal/bash.nix` configures the system Bash shell using `programs.bash`. It sources a library of shell functions and sets aliases for most of the common commands.
 
 **Aliases** replace several standard commands: `ls`/`la`/`lss` and variants all point to `eza` with color, git status, icons, and directory-first sorting. `grep` is replaced with `ripgrep`. `cp` and `mv` have `-vi` flags for verbosity and overwrite protection. `sudo` is aliased with a trailing space so aliases are expanded after `sudo`. A `cpv` alias wraps `rsync` for copy-with-progress.
 
@@ -301,7 +301,7 @@ FZF completion is enabled via `fzf-bash-completion.sh`, bound to the Tab key. FZ
 
 A custom `giturl` module (`Terminal/starship_custom/giturl.sh`) displays a provider-specific icon (GitHub, GitLab, Bitbucket, or generic Git) based on the remote URL.
 
-The nix-shell indicator is configured to show `❄️ pure shell`, `❄️ impure shell`, or `❄️ unknown shell` depending on the nix shell type, making it visually clear when inside a development shell.
+The nix-shell indicator shows `❄️ pure shell`, `❄️ impure shell`, or `❄️ unknown shell` depending on the nix shell type, so you can tell at a glance whether you are in a development shell.
 
 ---
 
@@ -345,7 +345,7 @@ Several packages are overridden in the top-level overlay in `configuration.nix`:
 
 The `Sec/` directory is listed in `.gitignore` and never committed. It contains:
 
-- `secrets.nix`: A Nix attribute set with Wi-Fi passwords, MAC addresses, git email addresses, database passwords, and API keys, imported by files that need them.
+- `secrets.nix`: A Nix attribute set with Wi-Fi passwords, MAC addresses, git email addresses, database passwords, and API keys, imported by files that need them. **Must** define `username` and `hostname`. These are the system's primary user and hostname, consumed by `ID/ID.nix` and referenced throughout the config.
 - `network-manager.env`: An environment file referenced by NetworkManager's `ensureProfiles.environmentFiles`, containing the actual PSK values interpolated into profile configurations.
 - `hardware-detected.nix`: Auto-generated by the hardware detection script at activation time.
 
@@ -361,7 +361,7 @@ sudo git init
 sudo chown -R $(whoami) .git/
 ```
 
-The `Sec/` directory must be populated manually before the first build. At minimum, `secrets.nix` must exist and export the expected attributes, and `network-manager.env` must contain the network credentials.
+The `Sec/` directory must be populated manually before the first build. At minimum, `secrets.nix` must exist and export the expected attributes (including `username` and `hostname`), and `network-manager.env` must contain the network credentials.
 
 On first boot after a rebuild, the hardware detection script runs as part of system activation and writes `Sec/hardware-detected.nix`. Subsequent rebuilds can then use the hardware-conditional logic.
 
