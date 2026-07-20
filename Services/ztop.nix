@@ -26,7 +26,6 @@
     ./SSI.nix
 
     ./Browser.nix
-
-
+    ./Packages.nix
   ];
 }

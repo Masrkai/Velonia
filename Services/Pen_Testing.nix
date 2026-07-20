@@ -1,127 +1,117 @@
-{ config, lib, pkgs, modulesPath, ... }:
+{  config, lib, pkgs, modulesPath, ... }:
 
 let
   customPackages = {
-    #? Java
-    jsql        = pkgs.callPackage ../Programs/Packages/jsql.nix {};
+    jsql = pkgs.callPackage ../Programs/Packages/jsql.nix { };
 
-    #! Unknown (Need Looking)
-    wifi-honey  = pkgs.callPackage ../Programs/Packages/wifi-honey.nix {};
-    hostapd-wpe = pkgs.callPackage ../Programs/Packages/hostapd-wpe.nix {};
-
+    wifi-honey = pkgs.callPackage ../Programs/Packages/wifi-honey.nix { };
+    hostapd-wpe = pkgs.callPackage ../Programs/Packages/hostapd-wpe.nix { };
   };
 in
 {
 
+  #--> Wireshark
+  programs.wireshark = {
+    enable = true;
+    package = pkgs.wireshark;
+  };
 
-    #--> Wireshark
-    programs.wireshark= {
-      enable = true;
-      package = pkgs.wireshark;
-    };
+  #-> Ghidra
+  programs.ghidra = {
+    enable = true;
+    gdb = true;
 
-    #-> Ghidra
-    programs.ghidra = {
-      enable = true;
-      gdb = true;
+  };
 
-    };
+  environment.systemPackages = with pkgs; [
 
-    environment.systemPackages = with pkgs;
-    [
+    #!####################
+    #! Pentration-Testing:
+    #!####################
+    #> Excution
+    strace
+    ltrace
 
-      #!####################
-      #! Pentration-Testing:
-      #!####################
-        #> Terminals
-        xterm
+    #> Password cracking
+    crunch
+    hashcat
+    hcxtools
+    hcxdumptool
+    zip2hashcat
+    hashcat-utils
 
-        #> Excution
-        strace
-        ltrace
+    #> Internet basics
+    iw
+    dig
+    nmap
+    # unstable.nmapsi4
+    rustscan
+    getdns
+    linssid
+    tcpdump
+    ettercap
+    (lib.lowPrio iproute2)
+    arp-scan
+    inetutils
+    traceroute
 
-        #> Password cracking
-        crunch
-        hashcat
-        hcxtools
-        hcxdumptool
-        zip2hashcat
-        hashcat-utils
+    ligolo-ng
 
-        #> Internet basics
-        iw
-        dig
-        nmap
-        # unstable.nmapsi4
-        rustscan
-        getdns
-        linssid
-        tcpdump
-        ettercap
-        (lib.lowPrio iproute2)
-        arp-scan
-        inetutils
-        traceroute
+    bettercap
+    burpsuite
 
-        ligolo-ng
+    #> DoS
+    hping
+    dsniff
 
-        bettercap
-        burpsuite
+    #> Wireless
+    mdk4
+    airgorah
+    aircrack-ng
+    linux-wifi-hotspot
 
-        #> DoS
-        hping
-        dsniff
+    #> WPS
+    bully
+    pixiewps
+    reaverwps-t6x
 
-        #> Wireless
-        mdk4
-        airgorah
-        aircrack-ng
-        linux-wifi-hotspot
+    #> MITM
+    # customPackages.beef
+    customPackages.wifi-honey
 
-          #> WPS
-          bully
-          pixiewps
-          reaverwps-t6x
+    #> Utilities
+    tmux
+    asleap
+    lighttpd
 
-        #> MITM
-        # customPackages.beef
-        customPackages.wifi-honey
+    #> Memory
+    pkgs.pince
 
-        #> Utilities
-        tmux
-        asleap
-        lighttpd
+    #> Exploitation
+    # armitage
+    exploitdb
+    pkgs.metasploit
+    armitage
 
-        #> Memory
-        pkgs.pince
+    #> SQL
+    sqlmap
+    customPackages.jsql
 
-        #> Exploitation
-        # armitage
-        exploitdb
-        pkgs.metasploit
-        armitage
+    #> Evil Twin
+    dnsmasq
+    dhcpcd
+    cni-plugins
+    customPackages.hostapd-wpe
 
-        #> SQL
-        sqlmap
-        customPackages.jsql
+    foremost
 
-        #> Evil Twin
-        dnsmasq
-        dhcpcd
-        cni-plugins
-        customPackages.hostapd-wpe
+    (lib.setPrio 1 bind)
 
-        foremost
+    #> Encryption
+    gnupg
 
-        (lib.setPrio 1 bind)
+    bloodhound
 
-       #> Encryption
-       gnupg
-
-
-       bloodhound
-
-    ];
-
+  ];
 
 }

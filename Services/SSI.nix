@@ -22,26 +22,28 @@ let
 #   '';
 in
 {
-  environment.systemPackages = with pkgs; [
-     keepassxc
-     libsecret
-  ];
+  config = lib.mkIf config.hardware.isAsusTuf {
+    environment.systemPackages = with pkgs; [
+       keepassxc
+       libsecret
+    ];
 
-  security.pam.services.login.kwallet.enable = lib.mkDefault false;
-  security.pam.services.sddm.kwallet.enable  = lib.mkDefault false;
+    security.pam.services.login.kwallet.enable = lib.mkDefault false;
+    security.pam.services.sddm.kwallet.enable  = lib.mkDefault false;
 
-  services.dbus.packages = [ 
-    keepassxcSecretService
-    #  disableKwalletCompat
-      ];
+    services.dbus.packages = [ 
+      keepassxcSecretService
+      #  disableKwalletCompat
+        ];
 
-  environment.etc."xdg/autostart/keepassxc.desktop".text = ''
-    [Desktop Entry]
-    Name=KeePassXC
-    Exec=${pkgs.keepassxc}/bin/keepassxc
-    Type=Application
-    X-GNOME-Autostart-enabled=true
-  '';
+    environment.etc."xdg/autostart/keepassxc.desktop".text = ''
+      [Desktop Entry]
+      Name=KeePassXC
+      Exec=${pkgs.keepassxc}/bin/keepassxc
+      Type=Application
+      X-GNOME-Autostart-enabled=true
+    '';
+  };
 }
 
 #? Store a dummy secret (It will prompt you to type a password)

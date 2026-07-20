@@ -105,29 +105,36 @@ in
     };
 
     systemPackages = with pkgs; [
+
+        # Terminal
+        kitty
+
+        # Nix Tools
+        nix-search
+        nixos-generators
+        nix-prefetch-git
+
+        # watch-like utilities
         viddy
         hwatch
 
-        moreutils
-
+        # essential terminal daily ddriver utilities.
         eza
+        bat
+        fzf
+        less
         ripgrep
-
+        toolong
         termshot
-
         fastfetch
 
+        # Manuals
         man
         man-pages
         linux-manual
         man-pages-posix
 
-        bat
-        less
-
-        toolong
-
-        nix-search
+        moreutils
       ]
       ++ scriptPackages; # > auto-collected from #NIXPKGS comments
   };
