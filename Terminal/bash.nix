@@ -1,20 +1,22 @@
-{ config, pkgs, lib, ... }:
+{  config, pkgs, lib, ...}:
 
 let
   # Reads a .sh file and extracts package names from any line like:
   #   #NIXPKGS ffmpeg unzip p7zip
   # Step 1: Extract package name strings from a single script file
-  extractPkgNames = file:
+  extractPkgNames =
+    file:
     let
-      lines   = lib.splitString "\n" (builtins.readFile file);
+      lines = lib.splitString "\n" (builtins.readFile file);
       nixpkgs = builtins.filter (l: builtins.match "^#NIXPKGS.*" l != null) lines;
     in
-      builtins.concatMap (l:
-        let m = builtins.match "^#NIXPKGS +(.*)" l;
-        in if m != null
-           then builtins.filter (s: s != "") (lib.splitString " " (builtins.head m))
-           else []
-      ) nixpkgs;
+    builtins.concatMap (
+      l:
+      let
+        m = builtins.match "^#NIXPKGS +(.*)" l;
+      in
+      if m != null then builtins.filter (s: s != "") (lib.splitString " " (builtins.head m)) else [ ]
+    ) nixpkgs;
 
   scriptFiles = [
     ./Functions/sudo.sh
@@ -37,16 +39,15 @@ let
   ];
 
   # Step 2: Collect all names across all files, dedupe, then resolve to packages
-  scriptPackages = map (name: pkgs.${name})
-                     (lib.unique
-                       (builtins.concatMap extractPkgNames scriptFiles));
+  scriptPackages = map (name: pkgs.${name}) (
+    lib.unique (builtins.concatMap extractPkgNames scriptFiles)
+  );
 
-  scriptContent = lib.concatMapStrings (f:
-    "\n# --- ${builtins.toString f} ---\n" + builtins.readFile f + "\n"
+  scriptContent = lib.concatMapStrings (
+    f: "\n# --- ${builtins.toString f} ---\n" + builtins.readFile f + "\n"
   ) scriptFiles;
 in
 {
-  imports = [ ./starship.nix ];
 
   programs.bash = {
     enableLsColors = lib.mkForce false;
@@ -80,63 +81,61 @@ in
       mv = "mv -v ";
 
       # Replacing List command with eza (Read it's help before you edit)
-      l    = "eza --color=always --group-directories-first --long --icons=always --links -a --tree";
-      ls   = "eza --color=always --group-directories-first --long --git --icons=always --links";
-      lss  = "eza --color=always --group-directories-first --long --git --icons=always --total-size --links";
+      l = "eza --color=always --group-directories-first --long --icons=always --links -a --tree";
+      ls = "eza --color=always --group-directories-first --long --git --icons=always --links";
+      lss = "eza --color=always --group-directories-first --long --git --icons=always --total-size --links";
 
-      la   = "eza --color=always --group-directories-first --long --git --icons=always --links -A";
-      lsa  = "eza --color=always --group-directories-first --long --git --icons=always --total-size --links -A";
-      lsg  = "eza --color=always --group-directories-first --long --git --icons=always --links --group";
-
+      la = "eza --color=always --group-directories-first --long --git --icons=always --links -A";
+      lsa = "eza --color=always --group-directories-first --long --git --icons=always --total-size --links -A";
+      lsg = "eza --color=always --group-directories-first --long --git --icons=always --links --group";
 
       checkcpplibs = "g++ -v -E -x c++ - </dev/null 2>&1 | grep -A 12 '#include <...> search starts here:'";
 
-     };
+    };
   };
-
 
   environment = {
 
-  #? Set up environment variables for colored man pages
-  variables = {
-  MANPAGER = lib.mkForce "sh -c 'col -bx | bat -l man -p'";           #* Use bat as the pager for man with syntax highlighting
-  LESSOPEN = lib.mkForce "| ${pkgs.lesspipe}/bin/lesspipe.sh %s";     #* Set LESSOPEN to use lesspipe
-  LESS = lib.mkForce "-R";                                            #* Ensure LESS is configured to interpret ANSI color codes correctly
-  MANROFFOPT = "-c";                                                  #* Enable colorized output for man pages
+    #? Set up environment variables for colored man pages
+    variables = {
+      MANPAGER = lib.mkForce "sh -c 'col -bx | bat -l man -p'"; # * Use bat as the pager for man with syntax highlighting
+      LESSOPEN = lib.mkForce "| ${pkgs.lesspipe}/bin/lesspipe.sh %s"; # * Set LESSOPEN to use lesspipe
+      LESS = lib.mkForce "-R"; # * Ensure LESS is configured to interpret ANSI color codes correctly
+      MANROFFOPT = "-c"; # * Enable colorized output for man pages
+    };
+
+    systemPackages = with pkgs; [
+        viddy
+        hwatch
+
+        moreutils
+
+        eza
+        ripgrep
+
+        termshot
+
+        fastfetch
+
+        man
+        man-pages
+        linux-manual
+        man-pages-posix
+
+        bat
+        less
+
+        toolong
+
+        nix-search
+      ]
+      ++ scriptPackages; # > auto-collected from #NIXPKGS comments
   };
-
-  systemPackages = with pkgs; [
-    viddy
-    hwatch
-
-    moreutils
-
-    eza
-    ripgrep
-
-    termshot
-
-    fastfetch
-
-    man
-    man-pages
-    linux-manual
-    man-pages-posix
-
-    bat
-    less
-
-    toolong
-
-    nix-search
-  ] ++ scriptPackages;  #> auto-collected from #NIXPKGS comments
-  };
-
 
   #--> mlocate // "updatedb & locate"
   services.locate = {
-    enable    = true;
-    package   = pkgs.mlocate;
+    enable = true;
+    package = pkgs.mlocate;
     # localuser = null;
   };
 

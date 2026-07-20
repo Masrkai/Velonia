@@ -1,8 +1,6 @@
 { pkgs, ... }:
 
-
 {
-
 
   environment.systemPackages = with pkgs; [
     starship
@@ -14,17 +12,16 @@
     settings = {
       # Custom format - removed $all to have more control
       format =
-      # "╭─ $directory$\{custom.giturl} $git_branch$git_status $python$nodejs$rust$java$golang$docker$package $cmd_duration\n╰─ $username$hostname $time$character";
-      let
-        line1 = "╭─ $directory\${custom.giturl} $git_branch$git_status $python$nodejs$rust$java$golang$docker$nix_shell$package $cmd_duration";
-        line2 = "╰─ $username$hostname $time$character ";
-      in
-      "${line1}\n${line2}";
+        # "╭─ $directory$\{custom.giturl} $git_branch$git_status $python$nodejs$rust$java$golang$docker$package $cmd_duration\n╰─ $username$hostname $time$character";
+        let
+          line1 = "╭─ $directory\${custom.giturl} $git_branch$git_status $python$nodejs$rust$java$golang$docker$nix_shell$package $cmd_duration";
+          line2 = "╰─ $username$hostname $time$character ";
+        in
+        "${line1}\n${line2}";
 
       fill = {
         symbol = " ";
-      }
-;      # Character configuration
+      }; # Character configuration
       character = {
         success_symbol = "[➜](bold green)";
         error_symbol = "[➜](bold red)";
@@ -76,7 +73,6 @@
         deleted = "✘\${count}";
       };
 
-
       # Nix shell indicator
       nix_shell = {
         disabled = false;
@@ -90,8 +86,17 @@
 
       # Python - only show in Python projects
       python = {
-        detect_extensions = ["py" "pyi"];
-        detect_files = ["requirements.txt" "pyproject.toml" "Pipfile" "setup.py" "__init__.py" ];
+        detect_extensions = [
+          "py"
+          "pyi"
+        ];
+        detect_files = [
+          "requirements.txt"
+          "pyproject.toml"
+          "Pipfile"
+          "setup.py"
+          "__init__.py"
+        ];
         # detect_folders = [".venv" "venv" "env"];
         symbol = " ";
         style = "yellow";
@@ -100,32 +105,52 @@
 
       # Other language modules - only show when relevant
       nodejs = {
-        detect_extensions = ["js" "mjs" "cjs" "ts"];
-        detect_files = ["package.json" "node_modules"];
+        detect_extensions = [
+          "js"
+          "mjs"
+          "cjs"
+          "ts"
+        ];
+        detect_files = [
+          "package.json"
+          "node_modules"
+        ];
         symbol = " ";
         style = "green";
         format = " via [$symbol$version]($style)";
       };
 
       rust = {
-        detect_extensions = ["rs"];
-        detect_files = ["Cargo.toml"];
+        detect_extensions = [ "rs" ];
+        detect_files = [ "Cargo.toml" ];
         symbol = "󱘗 ";
         style = "brown";
         format = " via [$symbol$version]($style)";
       };
 
       java = {
-        detect_extensions = ["java" "class" "jar"];
-        detect_files = ["pom.xml" "build.gradle.kts" "build.sbt" ".java-version"];
+        detect_extensions = [
+          "java"
+          "class"
+          "jar"
+        ];
+        detect_files = [
+          "pom.xml"
+          "build.gradle.kts"
+          "build.sbt"
+          ".java-version"
+        ];
         symbol = " ";
         style = "red";
         format = " via [$symbol$version]($style)";
       };
 
       golang = {
-        detect_extensions = ["go"];
-        detect_files = ["go.mod" "go.sum"];
+        detect_extensions = [ "go" ];
+        detect_files = [
+          "go.mod"
+          "go.sum"
+        ];
         symbol = "󰟓 ";
         style = "cyan";
         format = " via [$symbol$version]($style)";
@@ -138,9 +163,6 @@
         format = " [$time]($style) ";
         time_format = "%H:%M";
       };
-
-
-
 
       # Disable package module to avoid conflicts
       package = {
