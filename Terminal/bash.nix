@@ -109,6 +109,32 @@ in
         # Terminal
         kitty
 
+        # essential terminal daily ddriver utilities.
+        eza
+        bat
+
+        fzf
+        less
+        most
+
+
+        ripgrep
+        toolong
+        termshot
+        fastfetch
+
+        # general CLI
+        wget
+        file
+        ethtool
+        busybox
+
+        # Manuals
+        man
+        man-pages
+        linux-manual
+        man-pages-posix
+
         # Nix Tools
         nix-search
         nixos-generators
@@ -118,21 +144,28 @@ in
         viddy
         hwatch
 
-        # essential terminal daily ddriver utilities.
-        eza
-        bat
-        fzf
-        less
-        ripgrep
-        toolong
-        termshot
-        fastfetch
+        # hardware proping
+        acpi
+        pciutils
+        hw-probe
 
-        # Manuals
-        man
-        man-pages
-        linux-manual
-        man-pages-posix
+        # monitoring
+        htop
+        btop
+        powertop
+        bandwhich
+        dmidecode
+        nvtopPackages.nvidia
+
+        # archival
+        pv
+        zstd
+        tarlz
+        unzip
+        unrar-wrapper
+
+        # audio (cli)
+        pamixer
 
         moreutils
       ]

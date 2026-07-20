@@ -21,18 +21,11 @@ in
     grayjay
 
     #-> General
-    acpi
-    wget
-    most
     sass
 
     gnome-network-displays
     # pure-ftpd
 
-    unzip
-    pciutils
-    hw-probe
-    unrar-wrapper
     rustdesk-flutter
     # (lib.lowPrio bash-completion)
 
@@ -59,14 +52,8 @@ in
     # koboldcpp
 
     #-> Monitoring
-    htop
-    btop
-    powertop
-    bandwhich
-    dmidecode
     gsmartcontrol
     mission-center
-    nvtopPackages.nvidia
 
     #-> Repair
     woeusb
@@ -86,19 +73,10 @@ in
     brave
     # mellowplayer
     keepassxc
-    fastfetch
     authenticator
     signal-desktop
 
-    #-> Archivers
-    pv
-    zstd
-    # pigz
-    tarlz
-    # p7zip
-
     #-> Audio
-    pamixer
     alsa-tools
     pavucontrol
 
@@ -106,13 +84,6 @@ in
     gparted # !has issues
     qdiskinfo
     gnome-disk-utility
-
-    #-> System Utilities
-    file
-    ethtool
-    mlocate
-    busybox
-    pciutils
 
     #-> KDE Specific
     kdePackages.kclock
@@ -153,10 +124,8 @@ in
     btrfs-progs
     # customPackages.harper
 
-    customPackages.logisim-evolution
-
     customPackages.vera
-
+    customPackages.logisim-evolution
   ];
 
 }
