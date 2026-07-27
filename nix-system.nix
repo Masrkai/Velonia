@@ -32,15 +32,16 @@
         };
       in {
         # Unstable package pins — single eval, submodules use pkgs.*
-        grayjay       = unstable.grayjay;
-        ani-cli       = unstable.ani-cli;
-        qdiskinfo     = unstable.qdiskinfo;
-        ollama-cuda   = unstable.ollama-cuda;
-        opencode      = unstable.opencode;
+        grayjay         = unstable.grayjay;
+        ani-cli         = unstable.ani-cli;
+        qdiskinfo       = unstable.qdiskinfo;
+        ollama-cuda     = unstable.ollama-cuda;
+        opencode        = unstable.opencode;
+        goose-cli       = unstable.goose-cli;
         pi-coding-agent = unstable.pi-coding-agent;
-        pince         = unstable.pince;
-        metasploit    = unstable.metasploit;
-        nixoscope     = unstable.nixoscope;
+        pince           = unstable.pince;
+        metasploit      = unstable.metasploit;
+        nixoscope       = unstable.nixoscope;
 
         filterOutX11 = prev.lib.filterAttrs (name: pkg:
           !(final.lib.strings.contains "libX11" (toString pkg) ||

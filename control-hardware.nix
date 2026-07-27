@@ -104,6 +104,9 @@
 
     #> Kernel parameters configuration
     kernelParams = [
+      # don't let the kernel control the power profile and communication of the GPUs
+      "pcie_aspm=off"
+
       "acpi_backlight=active" "acpi_osi=Linux"
 
       "usbcore.autosuspend=-1"

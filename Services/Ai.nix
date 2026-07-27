@@ -83,8 +83,9 @@
   ];
 
   environment.systemPackages = with pkgs; [
-    pkgs.opencode
-    pkgs.pi-coding-agent
+    opencode
+    pi-coding-agent
+    goose-cli
   ];
 
 }

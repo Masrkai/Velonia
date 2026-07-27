@@ -17,14 +17,14 @@
 
     services.supergfxd.enable = false;
 
-    services.asusd = lib.mkIf config.hardware.isAsusTuf {
-      enable = true;
+    services.asusd =  {
+      enable = false;
       # enableUserService = true;
     };
 
-    systemd.services.asusd = lib.mkIf config.services.asusd.enable {
-      environment.RUST_LOG = "asusd=warn";
-    };
+    # systemd.services.asusd = lib.mkIf config.services.asusd.enable {
+    #   environment.RUST_LOG = "asusd=warn";
+    # };
 
     # # TLP configuration (disabled when power-profiles-daemon is active)
     # services.tlp = {
