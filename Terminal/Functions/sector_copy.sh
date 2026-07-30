@@ -1,6 +1,5 @@
 
 sectorcopy() {
-    local extension=""
     local directory="."
     local maxdepth=1
 
@@ -8,26 +7,51 @@ sectorcopy() {
         case $opt in
             d) directory="$OPTARG" ;;
             m) maxdepth="$OPTARG" ;;
-            h) echo "Usage: sectorcopy [-d directory] [-m maxdepth] <extension>"; return 0 ;;
+            h) echo "Usage: sectorcopy [-d directory] [-m maxdepth] <extension...>"; return 0 ;;
             *) return 1 ;;
         esac
     done
     shift $((OPTIND - 1))
 
-    extension="$1"
-    if [[ -z "$extension" ]]; then
-        echo "Usage: sectorcopy [-d directory] [-m maxdepth] <extension>" >&2
+    local extensions=("$@")
+    if [[ ${#extensions[@]} -eq 0 ]]; then
+        echo "Usage: sectorcopy [-d directory] [-m maxdepth] <extension...>" >&2
         return 1
     fi
 
-    find "$directory" -maxdepth "$maxdepth" -type f -name "*$extension" -print0 | \
-    sort -z | \
+    local find_expr=()
+    for ext in "${extensions[@]}"; do
+        ext="${ext#.}"
+        if [[ ${#find_expr[@]} -gt 0 ]]; then
+            find_expr+=(-o)
+        fi
+        find_expr+=(-name "*.$ext")
+    done
+
+    local files=()
     while IFS= read -r -d '' file; do
-        echo "$(basename "$file"):"
-        echo
+        files+=("$file")
+    done < <(find "$directory" -maxdepth "$maxdepth" -type f \( "${find_expr[@]}" \) -print0 | sort -z)
+
+    if [[ ${#files[@]} -eq 0 ]]; then
+        echo "No files found matching: ${extensions[*]}" >&2
+        return 1
+    fi
+
+    {
         echo '```'
-        cat "$file"
+        for file in "${files[@]}"; do
+            echo "${file#$directory/}"
+        done
         echo '```'
         echo
-    done | wl-copy
+        for file in "${files[@]}"; do
+            echo "${file#$directory/}:"
+            echo
+            echo '```'
+            cat "$file"
+            echo '```'
+            echo
+        done
+    } | wl-copy
 }
