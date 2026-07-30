@@ -85,7 +85,16 @@
   environment.systemPackages = with pkgs; [
     opencode
     pi-coding-agent
-    goose-cli
+
+
+    # goose-cli
+  # (import (pkgs.fetchFromGitHub {
+  #   owner = "gi-dellav";
+  #   repo = "zerostack";
+  #   rev = "v1.7.2"; # Or a specific commit SHA / tag
+  #   sha256 = "sha256-rBFgrZvSnLxLulJxxPeS/+uVk56ifdgDl6JZ0uqtlp8="; # Replace with actual hash (see note below)
+  # }))
+
   ];
 
 }
