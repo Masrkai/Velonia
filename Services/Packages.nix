@@ -60,6 +60,8 @@ in
     ntfs3g # ? Needed by woeusb
     #  ventoy  #! this is a security concern after the XZ utils events
 
+    lm_sensors
+
     #-> Content
     kew
     yt-dlp
