@@ -1,4 +1,4 @@
-sectorcopy () {
+sectorcopy() {
     local directory="."
     local maxdepth=1
     local -a exclude_patterns=()
@@ -12,8 +12,14 @@ sectorcopy () {
             m) maxdepth="$OPTARG" ;;
             e) exclude_patterns+=("$OPTARG") ;;
             h)
-                echo "Usage: sectorcopy [-d directory] [-m maxdepth] [-e exclude_pattern]... <extension...>"
-                echo "  -e: exclude directories matching the given glob pattern (can be repeated)"
+                cat <<EOF
+Usage: sectorcopy [-d directory] [-m maxdepth] [-e pattern]... <extension...>
+  -d  Starting directory (default .)
+  -m  Maximum search depth (default 1)
+  -e  Exclude directories matching this glob pattern (may be repeated)
+  -h  Show this help
+Extensions are listed as separate arguments, e.g., txt md go
+EOF
                 return 0
                 ;;
             *) return 1 ;;
@@ -23,31 +29,27 @@ sectorcopy () {
 
     local extensions=("$@")
     if [[ ${#extensions[@]} -eq 0 ]]; then
-        echo "Usage: sectorcopy [-d directory] [-m maxdepth] [-e exclude]... <extension...>" >&2
+        echo "Usage: sectorcopy [-d directory] [-m maxdepth] [-e pattern]... <extension...>" >&2
         return 1
     fi
 
-    # Build extension filter for find
+    # Build extension filter (-name "*.ext" -o ...)
     local find_expr=()
     for ext in "${extensions[@]}"; do
-        ext="${ext#.}"
+        ext="${ext#.}"                # remove leading dot if any
         if [[ ${#find_expr[@]} -gt 0 ]]; then
             find_expr+=(-o)
         fi
         find_expr+=(-name "*.$ext")
     done
 
-    # Build the prune part for excluded directories
-    # For each pattern, we add: -name "pattern" -prune -o
+    # Build prune expressions for excluded directories
     local prune_expr=()
     for pat in "${exclude_patterns[@]}"; do
         prune_expr+=(-name "$pat" -prune -o)
     done
 
-    # The final find command:
-    #   ( prune_expr ... -type f ) -a ( extension filter ) -print0
-    # This prunes directories that match any -e pattern, and only selects
-    # regular files with the given extensions.
+    # Find files: apply prunes, then match extensions, and only regular files
     local files=()
     while IFS= read -r -d '' file; do
         files+=("$file")
@@ -62,6 +64,7 @@ sectorcopy () {
         return 1
     fi
 
+    # Build output and copy to clipboard
     {
         echo '```'
         for file in "${files[@]}"; do
