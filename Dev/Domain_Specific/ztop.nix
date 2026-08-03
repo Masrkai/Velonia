@@ -25,6 +25,8 @@
     ./DBs/PostgreSQL.nix
 
     ./DBs/storagebucket.nix
+
+    ./performance_analysis.nix
   ];
 
 }
