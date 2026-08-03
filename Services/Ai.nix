@@ -65,36 +65,72 @@
     listenAddress = "127.0.0.1";
   };
 
-  virtualisation = lib.mkMerge [
-    {
-      podman = {
-        enable = false;
-        dockerCompat = true;
-        #defaultNetwork.settings.dns_enabled = true;
-      };
-
-      # oci-containers = {
-      #   backend = "podman";
-      #   containers = {
-      #     "open-webui" = import ./containers/open-webui.nix;
-      #   };
-      # };
-    }
-  ];
-
   environment.systemPackages = with pkgs; [
+
+    litellm
+
     opencode
     pi-coding-agent
 
-
-    # goose-cli
-  # (import (pkgs.fetchFromGitHub {
-  #   owner = "gi-dellav";
-  #   repo = "zerostack";
-  #   rev = "v1.7.2"; # Or a specific commit SHA / tag
-  #   sha256 = "sha256-rBFgrZvSnLxLulJxxPeS/+uVk56ifdgDl6JZ0uqtlp8="; # Replace with actual hash (see note below)
-  # }))
-
   ];
+
+
+
+  services.litellm = {
+    enable = false;
+
+    host = "127.0.0.1"; # Bind to localhost for security
+    port = 4000;
+
+    # 1. Securely load your NVIDIA API key from an environment file
+    environmentFile = "/etc/nixos/Sec/litellm.env";
+
+    # 2. Define the LiteLLM proxy configuration
+    settings = {
+      model_list = [
+        {
+          # This is the "fake" model name OpenCode will request
+          model_name = "nvidia-glm-5.2";
+          litellm_params = {
+            # Prefix with nvidia_nim/ to route to the NVIDIA provider [[38]]
+            model = "nvidia_nim/nvidia/z-ai-glm-5.2"; 
+            api_key = "os.environ/NVIDIA_API_KEY";
+            
+            # --- THE MAGIC: Retries & Backoff ---
+            num_retries = 5;       # Retry up to 5 times on 429/ResourceExhausted errors
+            timeout = 120;         # Wait up to 120s before giving up
+            retry_after = 10;      # Base wait time (LiteLLM applies exponential backoff automatically)
+          };
+        }
+
+
+        {
+          # This is the "fake" model name OpenCode will request
+          model_name = "nvidia-deepseek-v4-pro";
+          litellm_params = {
+            # Prefix with nvidia_nim/ to route to the NVIDIA provider [[38]]
+            model = "nvidia_nim/nvidia/deepseek-ai-deepseek-v4-pro"; 
+            api_key = "os.environ/NVIDIA_API_KEY";
+            
+            # --- THE MAGIC: Retries & Backoff ---
+            num_retries = 5;       # Retry up to 5 times on 429/ResourceExhausted errors
+            timeout = 120;         # Wait up to 120s before giving up
+            retry_after = 10;      # Base wait time (LiteLLM applies exponential backoff automatically)
+          };
+        }
+
+    
+        
+      ];
+
+      # 3. Define the fallback chain
+      router_settings = {
+        # If "nvidia-proxy" exhausts its 5 retries, switch to "local-fallback" [[24]]
+      };
+    };
+  };
+
+  # Optional: Open the firewall if you need to access the proxy from other machines
+  # networking.firewall.allowedTCPPorts = [ 4000 ];
 
 }

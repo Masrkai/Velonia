@@ -6,16 +6,6 @@ in
 
 {
 
-    environment.systemPackages = with pkgs; [
-      #> Virtualization
-      qemu-utils
-      virt-viewer
-      virt-manager
-      spice
-      spice-protocol
-      virglrenderer  # Required for 3D acceleration
-    ];
-
     users.groups =
       lib.mkIf config.virtualisation.libvirtd.enable
         (builtins.listToAttrs (map (g: {
@@ -23,8 +13,34 @@ in
           value.members = [ config.identity.username ];
         }) virtualizationGroups));
 
+    # Rootless podman needs subuid/subgid ranges for your user.
+    # (This is per-user; repeat for each account that runs containers.)
+    users.users.${config.identity.username}.subUidGidRange = 100;
+
+
     #--> Qemu KVM & VirtualBox
     virtualisation = lib.mkForce {
+
+
+      podman = {
+        enable = false;
+        dockerCompat = true;
+        #defaultNetwork.settings.dns_enabled = true;
+
+        # Required for `docker-compose` style networking to resolve names.
+        defaultNetwork.settings.dns_enabled = true;
+
+        # Pull from Docker Hub / ghcr.io by default.
+        registries.search = [ "docker.io" "ghcr.io" "quay.io" ];
+      };
+
+      # oci-containers = {
+      #   backend = "podman";
+      #   containers = {
+      #     "open-webui" = import ./containers/open-webui.nix;
+      #   };
+      # };
+
     spiceUSBRedirection.enable = true;
       libvirtd = {
         enable = true;
@@ -43,22 +59,7 @@ in
             virglrenderer
           ];
 
-          # verbatimConfig = ''
-          # cgroup_device_acl = [
-          #   "/dev/null", "/dev/full", "/dev/zero",
-          #   "/dev/random", "/dev/urandom", "/dev/ptmx",
-          #   "/dev/kvm", "/dev/dri/renderD128"
-          # ]
-          # nvram = [ "${pkgs.OVMFFull}/FV/OVMF.fd:${pkgs.OVMFFull}/FV/OVMF_VARS.fd" ]
-          # '';
 
-          # ovmf = {
-          #   enable = true;
-          #   packages = [(pkgs.OVMFFull.override {
-          #   secureBoot = true;
-          #   tpmSupport = true;
-          # }).fd];
-          # };
         };
       };
 
@@ -68,4 +69,18 @@ in
     programs.dconf.enable = true;
 
 
+    environment.systemPackages = with pkgs; [
+      qemu-utils
+      virt-viewer
+      virt-manager
+      spice
+      spice-protocol
+      virglrenderer  # Required for 3D acceleration
+
+      # Useful extras for CI-style work on the host:
+      podman-compose
+      buildah    # for rebuilding images from Containerfiles
+      skopeo     # copy/inspect images across registries
+      dive       # inspect image layers
+    ];
 }
