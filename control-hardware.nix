@@ -117,7 +117,7 @@
       # CPU optimizations
       "amd_iommu=on"
       "mitigations=on"
-      "amd_pstate=guided"      # Enable AMD P-State driver
+      # "amd_pstate=off"      # Enable AMD P-State driver
       # "processor.max_cstate=7"  # Limit C-states for better response time
 
       # Remove
