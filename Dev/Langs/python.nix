@@ -60,6 +60,7 @@
         polars
 
         #-> Visuals libs
+        sympy
         seaborn
         matplotx
         matplotlib

@@ -10,7 +10,6 @@
   "amazonQ.suppressPrompts": {
     "amazonQChatDisclaimer": true,
   },
-
   // ============================================================================
   // UPDATES & EXTENSIONS
   // ============================================================================
@@ -18,7 +17,6 @@
   "extensions.autoUpdate": false,
   "extensions.ignoreRecommendations": true,
   "yaml.extension.recommendations": false,
-
   // ============================================================================
   // EDITOR - GENERAL
   // ============================================================================
@@ -30,14 +28,12 @@
   "editor.bracketPairColorization.enabled": true,
   "editor.guides.bracketPairs": "active",
   "editor.matchBrackets": "never",
-
   // ============================================================================
   // EDITOR - FONTS
   // ============================================================================
   "editor.fontSize": 14,
   "editor.fontLigatures": true,
   "editor.fontFamily": "'Iosevka Fixed Hv Ex Obl','Symbols Nerd Font',monospace",
-
   // ============================================================================
   // WORKBENCH - APPEARANCE
   // ============================================================================
@@ -51,7 +47,6 @@
   "workbench.editorAssociations": {
     "{git,gitlens}:/**/*.{md,csv,svg}": "default",
   },
-
   // ============================================================================
   // WINDOW
   // ============================================================================
@@ -59,12 +54,10 @@
   "window.commandCenter": false,
   "window.zoomLevel": -1,
   "window.newWindowProfile": "Default",
-
   // ============================================================================
   // DIFF EDITOR
   // ============================================================================
   "diffEditor.ignoreTrimWhitespace": false,
-
   // ============================================================================
   // TERMINAL
   // ============================================================================
@@ -79,21 +72,17 @@
   "terminal.integrated.defaultProfile.linux": "bash",
   "terminal.integrated.sendKeybindingsToShell": true,
   "terminal.integrated.customGlyphs": true,
-
   "terminal.integrated.rendererType": "dom",
   "terminal.integrated.cursorBlinking": false,
   "terminal.integrated.smoothScrolling": false,
   "terminal.integrated.enableFileLinks": "off",
   "terminal.integrated.shellIntegration.enabled": false,
-
-
   // ============================================================================
   // FILES & EXPLORER
   // ============================================================================
   "files.exclude": {
     "**/.git": false,
   },
-
   "explorer.confirmDelete": false,
   "explorer.confirmDragAndDrop": false,
   "explorer.confirmPasteNative": false,
@@ -111,7 +100,6 @@
     "*.sdb": "${capture}.${extname}-*",
     "*.s3db": "${capture}.${extname}-*",
   },
-
   // ============================================================================
   // GIT
   // ============================================================================
@@ -120,7 +108,6 @@
   "git.enableSmartCommit": true,
   "git.replaceTagsWhenPull": true,
   "git.openRepositoryInParentFolders": "never",
-
   // ============================================================================
   // LANGUAGE: NIX
   // ============================================================================
@@ -130,13 +117,14 @@
     "editor.insertSpaces": true,
     "editor.formatOnSave": false
   },
-
   "nix.serverPath": "nixd",
   "nix.enableLanguageServer": true,
   "nix.serverSettings": {
     "nixd": {
       "formatting": {
-        "command": ["alejandra"]
+        "command": [
+          "alejandra"
+        ]
       },
       "diagnostic": {
         "suppress": []
@@ -149,42 +137,53 @@
       }
     }
   },
-
   // ============================================================================
   // LANGUAGE: PYTHON
   // ============================================================================
-
   "[python]": {
     "editor.defaultFormatter": "charliermarsh.ruff",
-    "editor.formatOnSave": false,
+    "editor.formatOnSave": false
   },
-
   "editor.codeActionsOnSave": {
     "source.fixAll.ruff": "explicit",
-    "source.organizeImports.ruff": "explicit",
+    "source.organizeImports.ruff": "explicit"
   },
-
   "ruff.nativeServer": "on",
   "ruff.trace.server": "off",
-  "ruff.path": ["/run/current-system/sw/bin/ruff"],
-
+  "ruff.path": [
+    "/run/current-system/sw/bin/ruff"
+  ],
+  "basedpyright.analysis.typeCheckingMode": "basic",
+  "basedpyright.analysis.diagnosticSeverityOverrides": {
+    // Let Ruff handle style & unused code (eliminates redundancy)
+    "reportUnusedImport": "none",
+    "reportUnusedVariable": "none",
+    "reportDuplicateImport": "none",
+    "reportImplicitStringConcatenation": "none",
+    // Silence high-noise rules for third-party libraries without perfect types
+    "reportMissingTypeStubs": "none",
+    "reportUnknownMemberType": "none",
+    "reportUnknownVariableType": "none",
+    "reportUnknownArgumentType": "none",
+    "reportUnknownParameterType": "none",
+    "reportUnknownLambdaType": "none",
+    "reportAny": "none",
+    // Silence other highly pedantic rules
+    "reportUnusedCallResult": "none"
+  },
   "basedpyright.disableOrganizeImports": true,
   "basedpyright.disableLanguageServices": false,
   "basedpyright.analysis.autoSearchPaths": true,
   "basedpyright.analysis.useLibraryCodeForTypes": true,
-
   "python.terminal.launchArgs": [],
   "python.terminal.focusAfterLaunch": true,
   "python.terminal.activateEnvironment": false,
   "python.createEnvironment.contentButton": "show",
-
   "python.languageServer": "None",
   "python.defaultInterpreterPath": "/run/current-system/sw/bin/python",
-
   // TELEMTRY
   "python.experiments.enabled": false,
   "python.diagnostics.sourceMapsEnabled": false,
-
   // ============================================================================
   // LANGUAGE: Zig
   // ============================================================================
@@ -192,13 +191,10 @@
     "editor.defaultFormatter": "ziglang.vscode-zig",
     "editor.formatOnSave": false,
   },
-
   "zig.path": "/run/current-system/sw/bin/zig",
-
   "zig.zls.enabled": "on",
   "zig.zls.path": "/run/current-system/sw/bin/zls",
   "zig.buildOnSaveProvider": "off",
-
   // ============================================================================
   // LANGUAGE: GO
   // ============================================================================
@@ -206,44 +202,37 @@
     "editor.defaultFormatter": "golang.go",
     "editor.formatOnSave": true,
     "editor.codeActionsOnSave": {
-      "source.organizeImports": "explicit",
-    },
+      "source.organizeImports": "explicit"
+    }
   },
-
   "go.useLanguageServer": true,
-
   "gopls": {
     "formatting.gofumpt": true,
-
     "staticcheck": true,
-
     "analyses": {
       "unusedparams": true,
       "unusedwrite": true,
       "nilness": true,
       "shadow": true,
     },
-
     "usePlaceholders": true,
     "completeUnimported": true,
   },
-
   // ============================================================================
   // LANGUAGE: C/C++
   // ============================================================================
-  "clangd.arguments": ["--compile-commands-dir=${workspaceFolder}"],
-
+  "clangd.arguments": [
+    "--compile-commands-dir=${workspaceFolder}"
+  ],
   // ============================================================================
   // LANGUAGE: RUST
   // ============================================================================
   "rust-analyzer.restartServerOnConfigChange": true,
   "rust-analyzer.trace.server": "verbose",
-
   // ============================================================================
   // LANGUAGE: DART
   // ============================================================================
   "dart.enableServerSnippets": false,
-
   // ============================================================================
   // LANGUAGE: Slint
   // ============================================================================
@@ -251,10 +240,8 @@
     "editor.defaultFormatter": "Slint.slint",
     "editor.formatOnSave": false,
   },
-
   "slint.lspBinaryPath": "/run/current-system/sw/bin/slint-lsp",
   "slint.preview.style": "native",
-
   // ============================================================================
   // LANGUAGE: Prolog
   // ============================================================================
@@ -263,7 +250,6 @@
     "editor.insertSpaces": true,
     "editor.formatOnSave": false
   },
-
   "prolog.executablePath": "/run/current-system/sw/bin/swipl",
   "prolog.dialect": "swi",
   "prolog.terminal.runtimeArgs": [],
@@ -273,7 +259,6 @@
   "prolog.format.enabled": true,
   "prolog.format.tabSize": 4,
   "prolog.format.insertSpaces": true,
-
   // ============================================================================
   // LANGUAGE: PlantUML
   // ============================================================================
@@ -282,11 +267,9 @@
   "plantuml.render": "Local",
   "plantuml.urlFormat": "svg",
   "plantuml.exportFormat": "svg",
-
   // ============================================================================
   // LANGUAGE: Markdown
   // ============================================================================
-
   "[markdown]": {
     "editor.defaultFormatter": "DavidAnson.vscode-markdownlint",
     "editor.formatOnSave": true,
@@ -303,12 +286,10 @@
   "markdown-preview-enhanced.usePandocParser": true,
   "markdown-preview-enhanced.latexEngine": "xelatex",
   "markdown-preview-enhanced.mathRenderingOption": "MathJax",
-
   // ============================================================================
   // LANGUAGE: JSON
   // ============================================================================
   "json.schemaDownload.enable": false,
-
   // ============================================================================
   // EXTENSION: CODE RUNNER
   // ============================================================================
@@ -373,7 +354,6 @@
     "fortran_fixed-form": "cd $dir && gfortran $fileName -o $fileNameWithoutExt && $dir$fileNameWithoutExt",
     "objective-c": "cd $dir && gcc -framework Cocoa $fileName -o $fileNameWithoutExt && $dir$fileNameWithoutExt",
   },
-
   // ============================================================================
   // EXTENSION: BETTER COMMENTS
   // ============================================================================
@@ -433,12 +413,10 @@
       "italic": false,
     },
   ],
-
   // ============================================================================
   // EXTENSION: JUPYTER
   // ============================================================================
   "jupyter.askForKernelRestart": false,
-
   // ============================================================================
   // EXTENSION: NOTEBOOK
   // ============================================================================
@@ -450,17 +428,14 @@
   "notebook.output.textLineLimit": 600,
   "notebook.output.minimalErrorRendering": true,
   "notebook.output.scrolling": true,
-
   // ============================================================================
   // EXTENSION: SQLITE3 EDITOR
   // ============================================================================
   "sqlite3-editor.ui.minimizePanel": true,
-
   // ============================================================================
   // EXTENSION: BASH IDE
   // ============================================================================
   "bashIde.explainshellEndpoint": "http://localhost:5000",
-
   // ============================================================================
   // EXTENSION: Cmake Tools
   // ============================================================================
@@ -470,18 +445,14 @@
   "cmake.configureOnOpen": false,
   "cmake.configureOnEdit": false,
   "cmake.ctest.testExplorerIntegrationEnabled": false,
-
-
   // ============================================================================
   // EXTENSION: LIVE SERVER
   // ============================================================================
   "liveServer.settings.donotShowInfoMsg": true,
-
   // ============================================================================
   // EXTENSION: DRAWIO
   // ============================================================================
   "hediet.vscode-drawio.resizeImages": null,
-
   // ============================================================================
   // LAUNCH CONFIGURATION
   // ============================================================================
@@ -489,13 +460,10 @@
     "configurations": [],
     "compounds": [],
   },
-
   // ============================================================================
   // SPELL CHECKER
   // ============================================================================
-
   "typos.logLevel": "warn",
   "typos.diagnosticSeverity": "Hint",
   "typos.path": "/run/current-system/sw/bin/typos-lsp",
-
 }
