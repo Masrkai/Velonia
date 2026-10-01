@@ -1,0 +1,25 @@
+From 2177e0b09ae9ea4c01618288de36ff9c6af964a5 Mon Sep 17 00:00:00 2001
+From: michaelBelsanti <quasigod-io@proton.me>
+Date: Tue, 14 Jan 2025 20:26:19 -0500
+Subject: [PATCH] Don't create launch file on Linux
+
+---
+ Grayjay.Desktop.CEF/Program.cs | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Grayjay.Desktop.CEF/Program.cs b/Grayjay.Desktop.CEF/Program.cs
+index 0a2aa44..5047dea 100644
+--- a/Grayjay.Desktop.CEF/Program.cs
++++ b/Grayjay.Desktop.CEF/Program.cs
+@@ -246,7 +246,7 @@ namespace Grayjay.Desktop
+             File.Delete(PortFile);
+             File.WriteAllText(StartingUpFile, "");
+ 
+-            if(RuntimeInformation.IsOSPlatform(OSPlatform.Windows) || RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
++            if(RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+             {
+                 Process p = Process.GetCurrentProcess();
+                 File.WriteAllText("launch", Path.GetFileName(p.MainModule!.FileName));
+-- 
+2.47.1
+

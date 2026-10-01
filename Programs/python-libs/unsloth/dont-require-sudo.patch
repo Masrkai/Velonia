@@ -1,0 +1,8 @@
+diff --git a/unsloth_zoo/llama_cpp.py b/unsloth_zoo/llama_cpp.py
+--- a/unsloth_zoo/llama_cpp.py
++++ b/unsloth_zoo/llama_cpp.py
+@@ -283,3 +283,2 @@
+
+     print_outputs = []
+-    sudo = do_we_need_sudo()
+     sudo = False

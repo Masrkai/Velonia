@@ -1,0 +1,9 @@
+Sec
+
+CiscoPacketTracer8.deb
+hardware-configuration.nix
+
+# Reason of inclusion is to support
+# is to ease my colleges in understanding the repo more privately
+AGENTS.md
+opencode.json

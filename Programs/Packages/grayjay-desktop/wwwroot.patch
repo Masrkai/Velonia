@@ -1,0 +1,29 @@
+From 34c8c1803322acd951a8274e64c71720db056b22 Mon Sep 17 00:00:00 2001
+From: michaelBelsanti <quasigod-io@proton.me>
+Date: Tue, 14 Jan 2025 20:14:41 -0500
+Subject: [PATCH] Find wwwroot in executable directory on Linux
+
+---
+ Grayjay.ClientServer/GrayjayServer.cs | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/Grayjay.ClientServer/GrayjayServer.cs b/Grayjay.ClientServer/GrayjayServer.cs
+index 7290dfa..25ff3b8 100644
+--- a/Grayjay.ClientServer/GrayjayServer.cs
++++ b/Grayjay.ClientServer/GrayjayServer.cs
+@@ -141,6 +141,12 @@ namespace Grayjay.ClientServer
+                     if (!File.Exists(staticFilesPath) && executableDirectory != null)
+                         staticFilesPath = Path.Combine(executableDirectory, "../Resources/wwwroot");
+                 }
++                if (OperatingSystem.IsLinux())
++                {
++                    string? executableDirectory = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule?.FileName);
++                    if (!File.Exists(staticFilesPath) && executableDirectory != null)
++                        staticFilesPath = Path.Combine(executableDirectory, "wwwroot");
++                }
+ 
+                 Logger.i(nameof(GrayjayServer), $"RunServerAsync: Static files path '" + Path.GetFullPath(staticFilesPath) + "'.");
+                 _app.UseStaticFiles(new StaticFileOptions
+-- 
+2.47.1
+
