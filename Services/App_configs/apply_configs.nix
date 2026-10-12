@@ -9,7 +9,7 @@ let
     kitty     = ./kitty.conf;
     ghostty   = ./ghostty.conf;
     octave    = ./octaverc.conf;
-    kwalletrc = ./kwalletrc.conf;
+    # kwalletrc = ./kwalletrc.conf;
   };
 
 in
@@ -35,9 +35,6 @@ in
         mkdir -p ~/.config/ghostty/
         ${pkgs.coreutils}/bin/cp ${configFiles.ghostty} ~/.config/ghostty/config
 
-        # kwalletrc / kwallet
-        touch ~/.config/kwalletrc
-        ${pkgs.coreutils}/bin/cp ${configFiles.kwalletrc} ~/.config/kwalletrc
 
         # clangd
         mkdir -p ~/.config/clangd/
@@ -63,6 +60,10 @@ in
         }
         EOF
       '';
+      
+        # kwalletrc / kwallet
+        # touch ~/.config/kwalletrc
+        # ${pkgs.coreutils}/bin/cp ${configFiles.kwalletrc} ~/.config/kwalletrc
 
       User = username;
       Type = "oneshot";

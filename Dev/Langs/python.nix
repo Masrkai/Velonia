@@ -76,7 +76,7 @@
         pillow
 
         #-> AI / ML
-        jax
+        # jax
         mcp
         ollama
         litellm
