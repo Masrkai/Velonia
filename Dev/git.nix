@@ -14,6 +14,10 @@
       name = "maryam-othmann5";
       email = config.identity.secrets.Maryam_GitHub_Mail;
     };
+    Essa = {
+      name = "AHMED-ESSA007";
+      email = config.identity.secrets.Essa_GitHub_Mail;
+    };
   };
 
   # Unchanged in intent: pick identity by hardware. IdeaPad5 is not mapped in
@@ -24,6 +28,8 @@
     then gitConfigs.Masrkai
     else if config.hardware.isDellG15
     then gitConfigs.maryam-othmann5
+    else if config.hardware.isIdeaPad5
+    then gitConfigs.Essa
     else throw "Undetected hardware: No matching hardware configuration found to configure git";
 in {
   # ID.nix is imported by IDEs/default.nix as well. The module system
