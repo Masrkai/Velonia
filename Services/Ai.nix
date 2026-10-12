@@ -9,6 +9,19 @@
     prime-agent = pkgs.callPackage ../Programs/Packages/prime/prime-agent.nix {};
     mcp-searxng = pkgs.callPackage ../Programs/Packages/prime/mcp-searxng.nix {};
   };
+
+  flake-compat = builtins.fetchTarball {
+    url = "https://github.com/edolstra/flake-compat/archive/refs/tags/v1.1.0.tar.gz";
+    sha256 = "sha256-NeCCThCEP3eCl2l/+27kNNK7QrwZB1IJCrXfrbv5oqU=";
+  };
+  
+  # hermes-agent =
+  #   (import flake-compat {
+  #     src = builtins.fetchTarball {
+  #       url = "https://github.com/NousResearch/hermes-agent/archive/refs/tags/v0.21.6.tar.gz";
+  #       sha256 = "sha256-nET4+PalQSZ4xfhdg2Rb5NB40XxINAkSvpUYHf947Io=";
+  #     };
+  #   }).defaultNix;
 in {
   services.ollama = {
     enable = false;
@@ -74,9 +87,14 @@ in {
     #     (pkgs.llama-cpp.override { cudaSupport = true; })
 
     # customPackages.prime-agent
-    #    customPackages.mcp-searxng
+    customPackages.mcp-searxng
+    # pi-coding-agent
 
-    pi-coding-agent
+    # Hermes is very disrespectful of system pkgs
+    # they want to provide everything from top to buttom
+    # in theory this isn't bad but in practice this means
+    # a very large closure / download / bundel size
+    # hermes-agent.packages.${pkgs.stdenv.hostPlatform.system}.default
   ];
 
   services.litellm = {

@@ -24,11 +24,11 @@
 
   nixvimSrc = import (builtins.fetchGit {
     url = "https://github.com/nix-community/nixvim";
-    # ref = "nixos-25.11"; # match your NixOS version
+    ref = "nixos-26.05"; # match your NixOS version
     # optionally pin a specific commit:
     # get latest by running the following command
     # git ls-remote https://github.com/nix-community/nixvim refs/heads/nixos-25.11
-    rev = "b8f76bf5751835647538ef8784e4e6ee8deb8f95";
+    # rev = "b8f76bf5751835647538ef8784e4e6ee8deb8f95";
   });
 in {
   imports = [(import nixvimSrc).nixosModules.nixvim];
@@ -85,27 +85,29 @@ in {
       # =======================================================================
       # UI / NAVIGATION / PREVIEWING
       # =======================================================================
-      plugins.neo-tree = {
+      # plugins.neo-tree = {
+      #   enable = true;
+      #   settings = {
+      #     close_if_last_window = true;
+      #     window = {
+      #       position = "right";
+      #       width = 35;
+      #     };
+      #     filesystem = {
+      #       filtered_items = {
+      #         visible = true;
+      #         hide_gitignored = false;
+      #       };
+      #       follow_current_file = {
+      #         enabled = true;
+      #         leave_dirs_open = true;
+      #       };
+      #     };
+      #   };
+      # };
+      plugins.oil = {
         enable = true;
-        settings = {
-          close_if_last_window = true;
-          window = {
-            position = "right";
-            width = 35;
-          };
-          filesystem = {
-            filtered_items = {
-              visible = true;
-              hide_gitignored = false;
-            };
-            follow_current_file = {
-              enabled = true;
-              leave_dirs_open = true;
-            };
-          };
-        };
       };
-
       plugins.bufferline = {
         enable = true;
         settings.options = {
@@ -319,6 +321,11 @@ in {
       # Keymaps / Shortcuts
       # =======================================================================
 
+      globals = {
+        loaded_netrw = 1;
+        loaded_netrwPlugin = 1;
+      };
+
       keymaps = [
         {
           mode = ["n" "v"];
@@ -327,6 +334,32 @@ in {
             function() require("conform").format({ async = true, lsp_fallback = true }) end
           '';
           options.desc = "Format buffer";
+        }
+
+        {
+          mode = "n";
+          key = "<leader>ff";
+          action = "<cmd>Telescope find_files<cr>";
+          options.desc = "Find files";
+        }
+        {
+          mode = "n";
+          key = "<leader>sg";
+          action = "<cmd>Telescope live_grep<cr>";
+          options.desc = "Search text";
+        }
+        {
+          mode = "n";
+          key = "<leader>fb";
+          action = "<cmd>Telescope buffers<cr>";
+          options.desc = "Find buffers";
+        }
+
+        {
+          mode = "n";
+          key = "<leader>E";
+          action = "<cmd>Oil<cr>";
+          options.desc = "Open Oil file explorer";
         }
       ];
 

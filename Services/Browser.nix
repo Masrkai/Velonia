@@ -58,7 +58,7 @@ in {
     config = lib.mkMerge [
     # ThinkPad -> Zen
     (lib.mkIf isThinkPad {
-      environment.systemPackages = [ zen-browser ];
+      environment.systemPackages = [ zen-browser pkgs.brave ];
       environment.sessionVariables.BROWSER = "zen";
     })
 

@@ -1,6 +1,4 @@
-{ pkgs, ... }:
-
-{
+{pkgs, ...}: {
   environment.systemPackages =
     (with pkgs; [
       doxygen
@@ -9,9 +7,10 @@
 
       monolith
     ])
-    ++
-    (with pkgs; [
+    ++ (with pkgs; [
       typst
+      pyhanko-cli
+
       # miktex
       python313Packages.panflute
 

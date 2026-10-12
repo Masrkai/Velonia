@@ -99,7 +99,7 @@
         grayjay = unstable.grayjay;
         ani-cli = unstable.ani-cli;
         qdiskinfo = unstable.qdiskinfo;
-        # opencode = unstable.opencode;
+        opencode = unstable.opencode;
         pi-coding-agent = unstable.pi-coding-agent;
         pince = unstable.pince;
         metasploit = unstable.metasploit;

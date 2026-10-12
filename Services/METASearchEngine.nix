@@ -22,6 +22,12 @@
     };
   };
 
+
+
+  # Ensure SearXNG stops BEFORE Valkey, closing the Unix socket cleanly
+  systemd.services.searx.after = [ "redis-searxng.service" ];
+  systemd.services.searx.requires = [ "redis-searxng.service" ];
+
   # Ensure SearXNG user can access the socket
   users.users.searx.extraGroups = [ "redis-searxng" ];  # Note: group name matches the server name
 

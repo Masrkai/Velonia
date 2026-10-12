@@ -22,7 +22,6 @@ in {
   environment.systemPackages = with pkgs; [
     customPackages.harper
 
-
     ffmpeg-full
 
     # grayjay
@@ -47,8 +46,10 @@ in {
     #-> MicroChips
     esptool
     usbutils
-    arduino-ide
-    arduino-core
+    # arduino-ide
+    # arduino-core
+
+    arduino-cli
 
     #-> Benchmarking
     furmark
@@ -74,8 +75,8 @@ in {
     ani-cli
     mpv # ! Needed for ani-cli operation
 
-    #    brave
-    # mellowplayer
+    readest
+
     keepassxc
     authenticator
     signal-desktop
