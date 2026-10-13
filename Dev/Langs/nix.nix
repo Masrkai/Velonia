@@ -6,8 +6,6 @@
   environment.systemPackages = with pkgs; [
     nixfmt
 
-    direnv
-    nix-direnv
     nix-tree
     nix-init
 
