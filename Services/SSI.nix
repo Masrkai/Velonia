@@ -3,6 +3,8 @@
 { config, pkgs, lib, ... }:
 
 let
+  kwalletrc = ./App_configs/kwalletrc.conf;
+
   keepassxcSecretService = pkgs.runCommand "keepassxc-secret-service" {} ''
     mkdir -p $out/share/dbus-1/services
     cat > $out/share/dbus-1/services/org.freedesktop.secrets.service << EOF
@@ -22,7 +24,7 @@ let
 #   '';
 in
 {
-  config = lib.mkIf config.hardware.isAsusTuf {
+  config = lib.mkIf (config.hardware.isAsusTuf || config.hardware.isThinkPad) {
     environment.systemPackages = with pkgs; [
        keepassxc
        libsecret
@@ -42,6 +44,13 @@ in
       Exec=${pkgs.keepassxc}/bin/keepassxc
       Type=Application
       X-GNOME-Autostart-enabled=true
+    '';
+
+    system.activationScripts.ssiKwallet = lib.stringAfter ["users"] ''
+      mkdir -p ${config.users.users.${config.identity.username}.home}/.config
+      touch ${config.users.users.${config.identity.username}.home}/.config/kwalletrc
+      cp ${kwalletrc} ${config.users.users.${config.identity.username}.home}/.config/kwalletrc
+      chown ${config.identity.username}: ${config.users.users.${config.identity.username}.home}/.config/kwalletrc
     '';
   };
 }

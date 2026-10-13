@@ -9,7 +9,6 @@ let
     kitty     = ./kitty.conf;
     ghostty   = ./ghostty.conf;
     octave    = ./octaverc.conf;
-    kwalletrc = ./kwalletrc.conf;
   };
 
 in
@@ -34,10 +33,6 @@ in
         # ghostty
         mkdir -p ~/.config/ghostty/
         ${pkgs.coreutils}/bin/cp ${configFiles.ghostty} ~/.config/ghostty/config
-
-        # kwalletrc / kwallet
-        touch ~/.config/kwalletrc
-        ${pkgs.coreutils}/bin/cp ${configFiles.kwalletrc} ~/.config/kwalletrc
 
         # clangd
         mkdir -p ~/.config/clangd/
