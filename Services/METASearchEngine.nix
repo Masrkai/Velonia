@@ -101,7 +101,7 @@
           bind_address = "127.0.0.1";
           base_url = "http://localhost/";
           secret_key = config.identity.secrets.searx-secret-key;
-          limiter = true;  # Enable rate limiting
+          limiter = false;  # Enable rate limiting
           # ratelimit_low = 30;
           # ratelimit_high = 50;
         };
