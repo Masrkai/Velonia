@@ -165,6 +165,7 @@
 
             #            jax = py-final.callPackage ./Programs/python-libs/jax.nix{ };
             jaxlib = py-prev.jaxlib-bin;
+            jax = py-prev.jax.override { cudaSupport = false; };
 
             torch = py-prev.torch-bin;
             torchaudio = py-final.torchaudio-bin;

@@ -78,7 +78,7 @@
         #-> AI / ML
         jax
         mcp
-        ollama
+        # ollama
         litellm
         scikit-learn
 
