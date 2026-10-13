@@ -90,6 +90,7 @@
 
         #-> notebooks
         marimo
+        jupyter
       ])))
   ];
 }
