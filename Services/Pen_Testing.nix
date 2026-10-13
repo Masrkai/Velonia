@@ -110,7 +110,5 @@ in {
 
     #> Encryption
     gnupg
-
-    bloodhound
   ];
 }
