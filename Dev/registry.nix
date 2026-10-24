@@ -32,12 +32,13 @@
     };
 
     python = {
-      packages = with pkgs; [ruff basedpyright];
+      packages = with pkgs; [ruff pyrefly];
       filetypes = ["python"];
       # Neovim gets BOTH a type checker and ruff, matching VSCodium.
-      lsp.nvim = ["basedpyright" "ruff"];
+      lsp.nvim = ["pyrefly" "ruff"];
       formatter.nvim = "ruff_format";
       linter.nvim = "ruff";
+      nvimLspSettings.pyrefly.settings.python.pyrefly.typeCheckingMode = "basic";
     };
 
     cpp = {

@@ -153,28 +153,9 @@
   "ruff.path": [
     "@ruff@"
   ],
-  "basedpyright.analysis.typeCheckingMode": "basic",
-  "basedpyright.analysis.diagnosticSeverityOverrides": {
-    // Let Ruff handle style & unused code (eliminates redundancy)
-    "reportUnusedImport": "none",
-    "reportUnusedVariable": "none",
-    "reportDuplicateImport": "none",
-    "reportImplicitStringConcatenation": "none",
-    // Silence high-noise rules for third-party libraries without perfect types
-    "reportMissingTypeStubs": "none",
-    "reportUnknownMemberType": "none",
-    "reportUnknownVariableType": "none",
-    "reportUnknownArgumentType": "none",
-    "reportUnknownParameterType": "none",
-    "reportUnknownLambdaType": "none",
-    "reportAny": "none",
-    // Silence other highly pedantic rules
-    "reportUnusedCallResult": "none"
-  },
-  "basedpyright.disableOrganizeImports": true,
-  "basedpyright.disableLanguageServices": false,
-  "basedpyright.analysis.autoSearchPaths": true,
-  "basedpyright.analysis.useLibraryCodeForTypes": true,
+  "pyrefly.lspPath": "@pyrefly@",
+  "python.pyrefly.typeCheckingMode": "basic",
+  "python.pyrefly.disableLanguageServices": false,
   "python.terminal.launchArgs": [],
   "python.terminal.focusAfterLaunch": true,
   "python.terminal.activateEnvironment": false,

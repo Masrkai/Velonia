@@ -1,6 +1,6 @@
 # Langs/python.nix
 # `lib` was missing from the argument set before, which made lib.lowPrio an
-# evaluation error. ruff / basedpyright now live in dev/registry.nix as
+# evaluation error. ruff / pyrefly now live in dev/registry.nix as
 # standalone tools instead of inside withPackages, where an editor's LSP could
 # not see them from a project's own venv.
 {
@@ -40,7 +40,8 @@
         selenium
         curl-cffi
         beautifulsoup4
-        
+        trafilatura
+
         #-> performance analysis
         memray
 
@@ -81,6 +82,9 @@
         # ollama
         litellm
         scikit-learn
+        fastembed
+        sqlite-vec
+        pymupdf
 
         #-> CLI / TUI
         terminaltables

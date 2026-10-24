@@ -209,9 +209,9 @@
         ];
 
         outgoing = {
-          pool_connections = 8;
+          pool_connections = 2;
 
-          enable_http2 = true;
+          enable_http2 = false;
 
           request_timeout = 12.0;
           max_request_timeout = 15.0;

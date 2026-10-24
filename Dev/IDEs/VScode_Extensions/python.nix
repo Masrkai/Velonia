@@ -8,7 +8,7 @@
     ms-python.debugpy
 
     charliermarsh.ruff
-    detachhead.basedpyright
+    # basedpyright replaced by pyrefly (marketplace entry below)
 
       #->Jupyter
       ms-toolsai.jupyter
@@ -20,6 +20,14 @@
   ];
 
   python-marketplace-extensions = with pkgs.vscode-utils.extensionsFromVscodeMarketplace; [
+    # Pyrefly (Meta's Python type checker / LSP), replaces basedpyright.
+    # https://open-vsx.org/extension/meta/pyrefly
+    {
+      name = "pyrefly";
+      publisher = "meta";
+      version = "1.4.0";
+      sha256 = "sha256-7Fxa6JZzV7Wl/9V5fE3p99nzelYLEPNV3Yt3W1XMAwM=";
+    }
 
     # {
     #   #https://marketplace.visualstudio.com/items?itemName=marimo-team.vscode-marimo

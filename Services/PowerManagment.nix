@@ -16,6 +16,17 @@
   services.tlp = {
     enable = config.hardware.isThinkPad;
     settings = {
+      # --- CPU Performance Limits ---
+      # Cap the maximum CPU frequency (as a percentage of max).
+      # Lowering this directly reduces heat generation.
+      CPU_MAX_PERF_ON_AC = 80; # Try 80% first; reduce to 70 or 60 if still too hot.
+      CPU_MAX_PERF_ON_BAT = 50; # More aggressive limit on battery for longer runtime.
+
+      # Disable CPU Turbo Boost on AC to prevent sudden temperature spikes.
+      CPU_BOOST_ON_AC = 0;
+      # (Optional) Disable boost on battery as well.
+      CPU_BOOST_ON_BAT = 0;
+
       CPU_SCALING_GOVERNOR_ON_AC = "schedutil";
       CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
       CPU_ENERGY_PERF_POLICY_ON_AC = "performance";

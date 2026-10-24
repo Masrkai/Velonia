@@ -36,6 +36,7 @@
     nixd = "${pkgs.nixd}/bin/nixd";
     alejandra = "${pkgs.alejandra}/bin/alejandra";
     ruff = "${pkgs.ruff}/bin/ruff";
+    pyrefly = "${pkgs.pyrefly}/bin/pyrefly";
     zig = "${pkgs.zig}/bin/zig";
     zls = "${pkgs.zls}/bin/zls";
     slint_lsp = "${pkgs.slint-lsp}/bin/slint-lsp";
