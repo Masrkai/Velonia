@@ -23,6 +23,7 @@
   kotlinX = ext "kotlin";
   pythonX = ext "python";
   generalX = ext "general";
+  luaX = ext "lua";
 
   # ---------------------------------------------------------------------------
   # settings.json = vscode_config.jsonc with tool paths substituted.
@@ -97,6 +98,7 @@
       ++ generalX.general-nixpkgs-extensions
       ++ golang.golang-nixpkgs-extensions
       ++ prolog.prolog-nixpkgs-extensions
+      ++ luaX.lua-nixpkgs-extensions
       ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace (
         cpp.cpp-marketplace-extensions
         ++ sql.sql-marketplace-extensions
@@ -109,6 +111,7 @@
         ++ pythonX.python-marketplace-extensions
         ++ generalX.general-marketplace-extensions
         ++ prolog.prolog-marketplace-extensions
+        ++ luaX.lua-marketplace-extensions
       );
   };
 in {

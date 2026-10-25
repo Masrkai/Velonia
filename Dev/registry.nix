@@ -169,5 +169,19 @@
       formatter.nvim = null;
       linter.nvim = null;
     };
+
+    lua = {
+      packages = with pkgs; [lua-language-server stylua];
+      filetypes = ["lua"];
+      lsp.nvim = "lua_ls";
+      formatter.nvim = "stylua";
+      linter.nvim = null;
+      nvimLspSettings = {
+        lua_ls.settings.Lua = {
+          runtime.version = "LuaJIT";
+          workspace.checkThirdParty = false;
+        };
+      };
+    };
   };
 }

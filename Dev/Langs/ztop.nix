@@ -11,6 +11,7 @@
     ./kotlin.nix
     ./python.nix
     ./prolog.nix
+    ./lua.nix
   ];
 
 }
