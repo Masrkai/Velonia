@@ -183,5 +183,12 @@
         };
       };
     };
+
+    julia = {
+      filetypes = ["julia"];
+      lsp.nvim = null; # LanguageServer.jl must be installed via Pkg.add("LanguageServer")
+      formatter.nvim = null;
+      linter.nvim = null;
+    };
   };
 }
