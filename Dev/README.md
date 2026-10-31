@@ -1,24 +1,21 @@
 # Dev environment: single source of truth
 
-    dev/
-    ├── registry.nix        <- ONE place declaring LSP/formatter/linter per language
-    ├── lib.nix             <- flattens the registry for consumers
-    ├── IDEs/
-    │   ├── default.nix     <- dev.editors.* options, driven by ID.nix flags
-    │   ├── nvim.nix        <- generated from registry (pinned via fetchGit)
-    │   ├── vscodium.nix    <- settings.json = vscode_config.json (+) registry
-    │   ├── vscode_config.json  <- plain JSON, read with builtins.fromJSON
-    │   └── ...
-    └── Langs/              <- compilers/runtimes/build tools ONLY
+```
+Dev/
+├── registry.nix        <- ONE place declaring LSP/formatter/linter per language
+├── lib.nix             <- flattens the registry for consumers
+├── IDEs/
+│   ├── default.nix     <- dev.editors.* options, driven by ID.nix flags
+│   ├── nvim.nix        <- generated from registry (pinned via fetchGit)
+│   ├── vscodium.nix    <- settings.json = vscode_config.json (+) registry
+│   ├── vscode_config.json  <- plain JSON, read with builtins.fromJSON
+│   └── ...
+└── Langs/              <- compilers/runtimes/build tools ONLY
+```
 
 ## Editor selection (ID.nix)
 
-| Hardware  | neovim | VSCodium |
-|-----------|--------|----------|
-| ThinkPad  | yes    | yes      |
-| others    | yes    | yes      |
-
-Override per machine: `dev.editors.vscodium.enable = true;` (VSCodium defaults to enabled across environments).
+Both neovim and VSCodium are enabled on every machine — there are no per-machine editor differences. VSCodium defaults to enabled across environments; override with `dev.editors.vscodium.enable = true;` if that ever changes.
 
 ## Adding a language
 Add ONE entry to `registry.nix`. Both editors pick it up.

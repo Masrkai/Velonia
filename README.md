@@ -13,7 +13,7 @@ A personal NixOS configuration for daily-driver laptops, built over time with an
 The configuration is declarative throughout, everything is expressed in Nix, with secrets kept in an excluded `Sec/` directory.
 
 > **Started**: 10/11/2023 (DD/MM/YYYY)  
-> **Last reviewed:** 19/07/2026 (DD/MM/YYYY)
+> **Last reviewed:** 1/11/2026 (D/MM/YYYY)
 
 ---
 
@@ -32,13 +32,34 @@ The configuration is declarative throughout, everything is expressed in Nix, wit
 11. [Custom Packages & Scripts](#custom-packages--scripts)
 12. [Nix Configuration](#nix-configuration)
 13. [Secrets Management](#secrets-management)
-14. [Getting Started](#getting-started)
+14. [Design Decisions](#design-decisions)
+15. [Getting Started](#getting-started)
 
 ---
 
 ## Repository Layout
 
 The repository lives at `/etc/nixos/` and is structured so that each concern owns its own directory. The root `configuration.nix` is the single entry point that imports everything else.
+
+```
+/etc/nixos/
+├── configuration.nix        # Single entry point, imports everything below
+├── control-hardware.nix     # Overrides hardware-configuration.nix boilerplate
+├── desktop.nix              # KDE Plasma 6 / Wayland / SDDM
+├── graphics.nix             # NVIDIA driver, CUDA, per-machine GPU config
+├── nix-system.nix           # Nix daemon settings, channels, build limits
+├── security.nix             # Boot/kernel hardening parameters
+├── systemd.nix              # systemd-level tweaks
+├── ID/                      # Hardware detection (DMI → Sec/hardware-detected.nix)
+├── Networking/              # DNS stack, firewall, hardening, time sync, Warp
+├── Dev/                     # Languages, LSPs, IDEs, overlays (see Dev/README.md)
+├── Services/                # Ollama, SearXNG, Syncthing, OBS, gaming, pentest...
+├── Terminal/                # Bash, Starship, tmux
+├── Programs/                # Custom packages & Python scripts
+├── Nix-Shells/              # Ad-hoc dev shells
+├── VMISO/                   # VM & ISO build configurations
+└── Sec/                     # .gitignore'd secrets (see Secrets Management)
+```
 
 The `ztop.nix` convention is used throughout: every directory that groups multiple files provides a `ztop.nix` that imports all siblings, so the parent only needs to import that single file.
 
@@ -50,12 +71,25 @@ The `ztop.nix` convention is used throughout: every directory that groups multip
 
 Because the same repository is shared across multiple machines:
 
-- **ASUS TUF Gaming A15** (I burned that one haha sad)
-- **Dell G15**
-- **IdeaPad 5**
-- **ThinkPad T14 G1 AMD** (Currently developing this configuration on)
+| Machine | Role |
+|---|---|
+| **ASUS TUF Gaming A15** | (I burned that one haha sad) |
+| **Dell G15** | Daily driver |
+| **IdeaPad 5** | Daily driver |
+| **ThinkPad T14 G1 AMD** | Currently developing this configuration on |
 
 An activation-time shell script (`ID/detect-hardware.sh`) reads `/sys/class/dmi/id/product_name`, matches it against known DMI patterns, and writes a small Nix file to `Sec/hardware-detected.nix`. That generated file sets four boolean options (`hardware.isAsusTuf`, `hardware.isDellG15`, `hardware.isThinkPad`, `hardware.isIdeaPad5`) declared in `ID/ID.nix` and consumed wherever hardware-specific behavior is required.
+
+```mermaid
+flowchart LR
+    A[Activation script<br/>ID/detect-hardware.sh] -->|reads /sys/class/dmi/id/product_name| B{DMI pattern match}
+    B -->|ASUS TUF| C[hardware.isAsusTuf = true]
+    B -->|Dell G15| D[hardware.isDellG15 = true]
+    B -->|ThinkPad| E[hardware.isThinkPad = true]
+    B -->|IdeaPad 5| F[hardware.isIdeaPad5 = true]
+    C & D & E & F --> G[Sec/hardware-detected.nix<br/>auto-generated, gitignored]
+    G --> H[Consumed by modules<br/>browser routing, GPU, power, SSI]
+```
 
 ---
 
@@ -109,6 +143,16 @@ KDE Plasma 6 runs on Wayland via SDDM with the KWin compositor. X.Org server is 
 
 Resolution flows through three isolated layers:
 
+```mermaid
+flowchart LR
+    APP[Applications] -->|127.0.0.1:53| U[Unbound<br/>DNSSEC validation · caching<br/>qname minimization · ad-blocking<br/>StevenBlack hosts @ build time]
+    U -->|127.0.0.1:5354| D[dnscrypt-proxy<br/>encrypted upstream<br/>require_nolog · require_nofilter<br/>require_dnssec]
+    D --> UP[Upstream resolvers]
+
+    style U fill:#e8f0fe
+    style D fill:#e8f0fe
+```
+
 1. **Unbound** (`Networking/DNS/cache.nix` - `127.0.0.1:53`): DNSSEC validation, caching, query-name minimization, and ad-blocking (StevenBlack hosts fetched at build time).
 2. **dnscrypt-proxy** (`Networking/DNS/resolver.nix` - `127.0.0.1:5354`): Encrypted DNS upstream (`require_nolog`, `require_nofilter`, `require_dnssec`).
 3. **Upstream Resolvers**.
@@ -122,7 +166,10 @@ Resolution flows through three isolated layers:
 
 ### Firewall
 
-Handled by `nftables` with higher-level rules layered on top:
+Handled by `nftables` with higher-level rules layered on top. `fail2ban` is enabled, and dropped/refused packets are logged.
+
+<details>
+<summary>Open ports (click to expand)</summary>
 
 - TCP 53/5353/853 (DNS / DoT)
 - TCP 443 (OpenVPN)
@@ -134,17 +181,22 @@ Handled by `nftables` with higher-level rules layered on top:
 - TCP/UDP 1714-1764 (KDE Connect)
 - TCP/UDP 21114-21119 (RustDesk)
 
-`fail2ban` is enabled, and dropped/refused packets are logged.
+</details>
 
 ### Kernel Network Parameters
 
 Managed in `Networking/hardening/Network_Kernel_Parameters.nix`:
+
+<details>
+<summary>Parameter details (click to expand)</summary>
 
 - **Congestion Control**: BBR with `fq` qdisc.
 - **Buffers**: Raised to 16 MB max.
 - **IPv6**: Disabled system-wide.
 - **RP Filter**: Loose mode (value 2).
 - **SYN Cookies & Keepalives**: Enforced.
+
+</details>
 
 ---
 
@@ -172,11 +224,16 @@ Configured via `Dev/IDEs/vscodium.nix` with modular extensions (`Dev/IDEs/VScode
 
 ## Python/ML Package Overlays
 
-`Dev/overlays.nix` overrides Python packages to incorporate pre-built binary wheels (`torch-bin`, `torchaudio-bin`, `torchvision-bin`, `jaxlib-bin`) and custom derivations (`unsloth`, `flash-attn`, `vllm`, `xformers`, `smolagents`, `trl`, etc.):
+`Dev/overlays.nix` overrides Python packages to incorporate pre-built binary wheels (`torch-bin`, `torchaudio-bin`, `torchvision-bin`, `jaxlib-bin`) and custom derivations (`unsloth`, `flash-attn`, `vllm`, `xformers`, `smolagents`, `trl`, etc.).
+
+<details>
+<summary>Patch details (click to expand)</summary>
 
 - **unsloth-zoo**: Patched for CRLF line endings (`dos2unix`), sudo removal, and PEP 621 license compliance.
 - **xformers**: Parallel building disabled (`MAX_JOBS=2`) to prevent OOM errors.
 - **vllm**: Patched for cmakeFlags, PYTHONPATH propagation, and sandboxed `lsmod` removal.
+
+</details>
 
 ---
 
@@ -184,9 +241,14 @@ Configured via `Dev/IDEs/vscodium.nix` with modular extensions (`Dev/IDEs/VScode
 
 ### Status Overview
 
+<details>
+<summary>Service status list (click to expand)</summary>
+
 - **Active / Core**: Ollama (AI stack on port 11434 with CUDA), SearXNG (metasearch on port 8880), PipeWire (audio with RTKit), Syncthing, QEMU/KVM Virtualization, Radicale (CalDAV/CardDAV on port 5232).
 - **Hardware-Conditional**: Power Management (`asusd` disabled, `power-profiles-daemon` enabled per machine).
 - **Disabled / Templated Stubs**: Nextcloud, Open-WebUI, Apache Tika, Podman, ArcadeDB, PostgreSQL.
+
+</details>
 
 ### Additional Integrations
 
@@ -253,6 +315,32 @@ The `Sec/` directory is `.gitignore`d and contains:
 - `secrets.nix`: Attribute set containing Wi-Fi passwords, MAC addresses, git email, and API keys. **Must** define `username` and `hostname`.
 - `network-manager.env`: Environment file for NetworkManager PSK values.
 - `hardware-detected.nix`: Auto-generated by activation script.
+
+---
+
+## Design Decisions
+
+Choices that are deliberate rather than defaults — documented here so they don't get "fixed" by accident (or turn into issue threads).
+
+### Channels, not flakes
+
+This configuration is channel-based (`nixos`, `unstable`, `home-manager` — see [Nix Configuration](#nix-configuration)). Flakes are great, but channels keep the workflow simple on a multi-machine daily-driver setup: one `update` function, no lockfile churn, no flake registry drift to debug mid-rebuild. If that tradeoff stops making sense, this section is where the migration conversation starts.
+
+### Wayland-first, X.Org forcibly off
+
+`services.xserver.enable = lib.mkForce false` — not just unset, *forced* off, so a stray module can't silently re-enable it. Xwayland stays on for legacy apps. `forceFullCompositionPipeline` is deliberately left off; tear-free rendering is handled at the X server screen-section level instead.
+
+### KeePassXC over KWallet
+
+KWallet PAM integration is disabled in favor of KeePassXC as the `org.freedesktop.secrets` D-Bus provider (on supported hardware). One secret store, one database file, one thing to back up.
+
+### Python at `lib.lowPrio`
+
+The system Python environment is installed with `lib.lowPrio` so it never shadows project virtualenvs — nix-provided interpreters stay available without hijacking `python` resolution.
+
+### Build limits
+
+Builds are capped at 12 cores and 4 parallel jobs to prevent memory exhaustion on laptops — reproducibility is worth more than a faster, OOM-ing build.
 
 ---
 
