@@ -6,6 +6,8 @@
       ./nix-system.nix
       ./control-hardware.nix
 
+      # home-manager channel — see README (Nix Channels)
+      <home-manager/nixos>
 
       ./desktop.nix
       ./systemd.nix
@@ -17,6 +19,11 @@
       ./Programs/custom/ztop.nix
       ./Networking/Networking.nix
     ];
+
+    #--> Home-Manager: share the NixOS pkgs/overlays and install user packages
+    #    into /etc/profiles so they are on PATH system-wide.
+    home-manager.useGlobalPkgs = true;
+    home-manager.useUserPackages = true;
 
 
   time.timeZone = config.identity.secrets.TZ;
