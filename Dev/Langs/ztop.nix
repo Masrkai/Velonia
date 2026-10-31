@@ -12,6 +12,7 @@
     ./python.nix
     ./prolog.nix
     ./lua.nix
+    ./julia.nix
   ];
 
 }
