@@ -46,86 +46,148 @@
     plantuml_jar = "${pkgs.plantuml}/lib/plantuml.jar";
   };
 
-  vscodium = pkgs.vscode-with-extensions.override {
-    vscode = pkgs.vscodium;
-    vscodeExtensions = with pkgs.vscode-extensions;
-      [
-        #* HTML
-        ritwickdey.liveserver
+  # ---------------------------------------------------------------------------
+  # Extension profiles for home-manager's programs.vscode.
+  #
+  # sharedExtensions go into EVERY profile (editor-agnostic core). Everything
+  # else is per-profile: `default` carries the web/doc tooling plus general.nix,
+  # and each language gets its own profile built from its
+  # VScode_Extensions/<lang>.nix file, so switching profiles in VSCodium swaps
+  # the extension set. mutableExtensionsDir = false makes HM own the
+  # extensions dir; each profile gets its own immutable extension store.
+  # ---------------------------------------------------------------------------
+  sharedExtensions = with pkgs.vscode-extensions; [
+    #* General
+    usernamehw.errorlens
+    mechatroner.rainbow-csv
+    formulahendry.code-runner
+    shardulm94.trailing-spaces
+    aaron-bond.better-comments
+    tekumara.typos-vscode
 
-        #* PDF
-        tomoki1207.pdf
+    #? theming
+    pkief.material-icon-theme
 
-        #* Bash
-        mads-hartmann.bash-ide-vscode
+    #? VSCodium specific
+    editorconfig.editorconfig
 
-        #* Markdown
-        bierner.markdown-mermaid
-        shd101wyy.markdown-preview-enhanced
+    #? SSH
+    ms-vscode-remote.remote-ssh
+    ms-vscode-remote.remote-ssh-edit
+  ]
+  #? Theme shared across all profiles
+  ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
+    {
+      #https://open-vsx.org/extension/lukinco/lukin-vscode-theme
+      name = "lukin-vscode-theme";
+      publisher = "lukinco";
+      version = "0.1.5";
+      hash = "sha256-T6yCPCy2AprDqNTJk2ucN2EsCrODn4j/1oldSnQNigU=";
+    }
+  ];
 
-        #* YAML
-        redhat.vscode-yaml
+  defaultOnlyExtensions = with pkgs.vscode-extensions; [
+    #* HTML
+    ritwickdey.liveserver
 
-        #* General
-        usernamehw.errorlens
-        donjayamanne.githistory
-        mechatroner.rainbow-csv
-        formulahendry.code-runner
-        shardulm94.trailing-spaces
-        aaron-bond.better-comments
-        tekumara.typos-vscode
+    #* PDF
+    tomoki1207.pdf
 
-        #? theming
-        pkief.material-icon-theme
+    #* Bash
+    mads-hartmann.bash-ide-vscode
 
-        #* VSCodium specific
-        editorconfig.editorconfig
-        github.vscode-pull-request-github
+    #* Markdown
+    bierner.markdown-mermaid
+    shd101wyy.markdown-preview-enhanced
 
-        #? SSH
-        ms-vscode-remote.remote-ssh
-        ms-vscode-remote.remote-ssh-edit
-      ]
-      ++ sql.sql-nixpkgs-extensions
-      ++ cpp.cpp-nixpkgs-extensions
-      ++ zig.zig-nixpkgs-extensions
-      ++ umlx.UML-nixpkgs-extensions
-      ++ nixX.nix-nixpkgs-extensions
-      ++ java.java-nixpkgs-extensions
-      ++ rust.rust-nixpkgs-extensions
-      ++ dartX.dart-nixpkgs-extensions
-      ++ pythonX.python-nixpkgs-extensions
-      ++ generalX.general-nixpkgs-extensions
-      ++ golang.golang-nixpkgs-extensions
-      ++ prolog.prolog-nixpkgs-extensions
-      ++ luaX.lua-nixpkgs-extensions
-      ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace (
-        cpp.cpp-marketplace-extensions
-        ++ sql.sql-marketplace-extensions
-        ++ umlx.UML-marketplace-extensions
-        ++ nixX.nix-marketplace-extensions
-        ++ rust.rust-marketplace-extensions
-        ++ dartX.dart-marketplace-extensions
-        ++ golang.golang-marketplace-extensions
-        ++ kotlinX.kotlin-marketplace-extensions
-        ++ pythonX.python-marketplace-extensions
-        ++ generalX.general-marketplace-extensions
-        ++ prolog.prolog-marketplace-extensions
-        ++ luaX.lua-marketplace-extensions
-      );
+    #* YAML
+    redhat.vscode-yaml
+
+    #* Git
+    donjayamanne.githistory
+    github.vscode-pull-request-github
+  ];
+
+  # { <name>-nixpkgs-extensions; <name>-marketplace-extensions } -> HM profile
+  profileOf = name: e: {
+    extensions =
+      e."${name}-nixpkgs-extensions"
+      ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace
+      e."${name}-marketplace-extensions";
   };
+
+  # Profile name -> ext-set attr prefix (UML.nix uses an uppercase prefix).
+  langProfiles = {
+    sql = profileOf "sql" sql;
+    cpp = profileOf "cpp" cpp;
+    zig = profileOf "zig" zig;
+    nix = profileOf "nix" nixX;
+    uml = profileOf "UML" umlx;
+    java = profileOf "java" java;
+    rust = profileOf "rust" rust;
+    dart = profileOf "dart" dartX;
+    go = profileOf "golang" golang;
+    prolog = profileOf "prolog" prolog;
+    kotlin = profileOf "kotlin" kotlinX;
+    python = profileOf "python" pythonX;
+    lua = profileOf "lua" luaX;
+  };
+  # Every profile: shared core + its own extensions, and the SAME settingsJson
+  # store path. HM passes a store path to userSettings through verbatim
+  # (mkVscodeModule.nix), so the JSONC comments survive and all profiles share
+  # byte-identical settings.
+  profiles = lib.mapAttrs (_: p: {
+    extensions = sharedExtensions ++ p.extensions;
+    userSettings = settingsJson;
+  }) ({
+    default.extensions =
+      defaultOnlyExtensions
+      ++ generalX.general-nixpkgs-extensions
+      ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace
+      generalX.general-marketplace-extensions;
+
+    # Dedicated markdown/diagram profile: mermaid + plantuml only. The
+    # extensions also stay in the profiles they came from (default, sql, uml).
+    markdown.extensions = with pkgs.vscode-extensions;
+      [
+        bierner.markdown-mermaid
+        jebbs.plantuml
+      ]
+      ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
+        {
+          #https://open-vsx.org/api/bpruitt-goddard/mermaid-markdown-syntax-highlighting
+          name = "mermaid-markdown-syntax-highlighting";
+          publisher = "bpruitt-goddard";
+          version = "1.6.6";
+          hash = "sha256-1WwjGaYNHN6axlprjznF1S8BB4cQLnNFXqi7doQZjrQ=";
+        }
+      ];
+  } // langProfiles);
 in {
   config = lib.mkIf config.dev.editors.vscodium.enable {
-    # VSCodium plus the same tools neovim gets, so an editor never depends on
-    # which Langs/ module happens to be imported.
-    environment.systemPackages = [vscodium] ++ dev.allPackages;
+    # The same tools neovim gets, so an editor never depends on which Langs/
+    # module happens to be imported. The editor itself is installed by
+    # home-manager below.
+    environment.systemPackages = dev.allPackages;
 
-    # Writes settings for the primary user only, and only if the user has not
-    # replaced it with a symlink or hand-edited file (which would be lost).
-    system.userActivationScripts.vscode-config = ''
-      dir="$HOME/.config/VSCodium/User"
-      mkdir -p "$dir"
-      install -m 0644 ${settingsJson} "$dir/settings.json"
-    '';
+    # VSCodium with per-language extension profiles, managed by home-manager.
+    # Scoping: everything inside home-manager.users.<user> is evaluated by
+    # home-manager, so programs.vscodium here is HM's option.
+    #
+    # NOTE: settings.json is a read-only store symlink in every profile —
+    # change Dev/IDEs/vscode_config.jsonc and rebuild instead of editing in
+    # the VSCodium UI. Also close VSCodium before `nixos-rebuild switch`:
+    # HM registers profiles in globalStorage/storage.json, which VSCodium
+    # rewrites from RAM on exit.
+    home-manager.users.${config.identity.username} = {
+      home.stateVersion = "26.05";
+
+      programs.vscodium = {
+        enable = true;
+        package = pkgs.vscodium;
+        mutableExtensionsDir = false;
+        inherit profiles;
+      };
+    };
   };
 }

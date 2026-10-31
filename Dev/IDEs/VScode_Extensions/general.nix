@@ -8,13 +8,8 @@
   ];
 
   general-marketplace-extensions = with pkgs.vscode-utils.extensionsFromVscodeMarketplace; [
-      {
-        #https://open-vsx.org/extension/lukinco/lukin-vscode-theme
-        name = "lukin-vscode-theme";
-        publisher = "lukinco";
-        version = "0.1.5";
-        hash = "sha256-T6yCPCy2AprDqNTJk2ucN2EsCrODn4j/1oldSnQNigU=";
-      }
+      # NOTE: lukin-vscode-theme moved to the shared set in ../vscodium.nix
+      # (installed in every profile).
 
 
 #      {
@@ -74,39 +69,6 @@
               # hash = lib.fakeHash;
 
       }
-
-
-      {
-        # https://marketplace.visualstudio.com/items?itemName=TheQtCompany.qt-core
-        name = "qt-core";
-        publisher = "TheQtCompany";
-        version = "1.9.0";
-        hash = "sha256-IpqsDfhx9UIA3jm/BkPW9mzMkr+muvvhak/wPZb8HQA=";
-      }
-      {
-        # https://marketplace.visualstudio.com/items?itemName=TheQtCompany.qt-cpp
-        name = "qt-cpp";
-        publisher = "TheQtCompany";
-        version = "1.9.0";
-        hash = "sha256-S2r2vPRHeYXKwdq6Lu3z7ayecs7vY2BQaXtn5uTvsH4=";
-      }
-      {
-        # https://marketplace.visualstudio.com/items?itemName=TheQtCompany.qt-qml
-        name = "qt-qml";
-        publisher = "TheQtCompany";
-        version = "1.9.0";
-        hash = "sha256-cWS3xUAbPiH/Mqohs0reWNyfMLiSO7tXdIp7/GbTysw=";
-      }
-      {
-        # https://marketplace.visualstudio.com/items?itemName=TheQtCompany.qt-ui
-        name = "qt-ui";
-        publisher = "TheQtCompany";
-        version = "1.9.0";
-        hash = "sha256-L0kgPbiF1KiLnfhyB5TK3XG5pCLZrNvfbV+kwbhXPks=";
-      }
-
-
-
       {
         #https://marketplace.visualstudio.com/items?itemName=LucasFA.octaveexecution
         name = "octaveexecution";
