@@ -53,7 +53,7 @@
       #? History
       #  6.18.8: CVE-2026-31431 / Copy Fail | metigated by updating to 6.18.22 or later
       lib.mkIf (lib.versionOlder pkgs.linux.version "7.0.0") (
-        lib.mkDefault pkgs.linuxKernel.packages.linux_6_12
+        lib.mkDefault pkgs.linuxKernel.packages.linux_7_2
       );
 
     extraModulePackages = with config.boot.kernelPackages; [
