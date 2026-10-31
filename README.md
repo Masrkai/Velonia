@@ -148,9 +148,6 @@ flowchart LR
     APP[Applications] -->|127.0.0.1:53| U[Unbound<br/>DNSSEC validation · caching<br/>qname minimization · ad-blocking<br/>StevenBlack hosts @ build time]
     U -->|127.0.0.1:5354| D[dnscrypt-proxy<br/>encrypted upstream<br/>require_nolog · require_nofilter<br/>require_dnssec]
     D --> UP[Upstream resolvers]
-
-    style U fill:#e8f0fe
-    style D fill:#e8f0fe
 ```
 
 1. **Unbound** (`Networking/DNS/cache.nix` - `127.0.0.1:53`): DNSSEC validation, caching, query-name minimization, and ad-blocking (StevenBlack hosts fetched at build time).
