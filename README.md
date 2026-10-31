@@ -222,6 +222,28 @@ Two-line prompt showing directory, git remote icons & status, language indicator
 - **Build Limits**: Capped at 12 cores and 4 parallel jobs to prevent memory exhaustion.
 - **Unfree**: `nixpkgs.config.allowUnfree = true` enabled globally.
 
+### Nix Channels
+
+The system is channel-based. Three channels are required:
+
+```bash
+$ sudo nix-channel --list
+home-manager https://github.com/nix-community/home-manager/archive/release-26.05.tar.gz
+nixos        https://nixos.org/channels/nixos-26.05
+unstable     https://nixos.org/channels/nixpkgs-unstable
+```
+
+On a fresh machine, add them with:
+
+```bash
+sudo nix-channel --add https://nixos.org/channels/nixos-26.05 nixos
+sudo nix-channel --add https://github.com/nix-community/home-manager/archive/release-26.05.tar.gz home-manager
+sudo nix-channel --add https://nixos.org/channels/nixpkgs-unstable unstable
+sudo nix-channel --update
+```
+
+The `home-manager` channel is what resolves the `<home-manager/nixos>` import in `configuration.nix`. Day-to-day, the `update` shell function wraps `nix-channel --update` + `nixos-rebuild switch --upgrade` (see [Getting Started](#getting-started)).
+
 ---
 
 ## Secrets Management
