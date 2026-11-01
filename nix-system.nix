@@ -107,6 +107,7 @@
         signal-desktop = unstable.signal-desktop;
         heroic-unwrapped = unstable.heroic-unwrapped;
         yt-dlp = final.callPackage ./Programs/Packages/yt-dlp.nix {};
+        dwproton-bin = unstable.dwproton-bin;
 
         filterOutX11 = prev.lib.filterAttrs (name: pkg:
           !(final.lib.strings.contains "libX11" (toString pkg)
