@@ -148,6 +148,7 @@ flowchart LR
     APP[Applications] -->|127.0.0.1:53| U[Unbound<br/>DNSSEC validation · caching<br/>qname minimization · ad-blocking<br/>StevenBlack hosts @ build time]
     U -->|127.0.0.1:5354| D[dnscrypt-proxy<br/>encrypted upstream<br/>require_nolog · require_nofilter<br/>require_dnssec]
     D --> UP[Upstream resolvers]
+    U -->|"NTS hostnames only<br/>(domain-insecure, plain DNS)"| Q[Quad9<br/>9.9.9.9 / 149.112.112.112]
 ```
 
 1. **Unbound** (`Networking/DNS/cache.nix` - `127.0.0.1:53`): DNSSEC validation, caching, query-name minimization, and ad-blocking (StevenBlack hosts fetched at build time).
@@ -156,9 +157,27 @@ flowchart LR
 
 `systemd-resolved` and `resolvconf` are disabled. NetworkManager uses `dns = "default"`.
 
+#### NTS bootstrap exception
+
+The DNS/TLS stack and the clock depend on each other: chrony needs DNS and TLS to reach its NTS servers, but DNSSEC validation and TLS handshakes fail when the clock is wrong (e.g. dead CMOS battery, RTC reset). To break that deadlock, the four NTS server hostnames get a narrow exception in `cache.nix`:
+
+- `domain-insecure` is set **only** for `time.cloudflare.com`, `ntppool1.time.nl`, `nts.netnod.se`, and `ptbtime1.ptb.de` — everything else keeps full DNSSEC validation (failing closed with a wrong clock is the point).
+- Those names are forwarded over **plain DNS** to Quad9 (`9.9.9.9`, `149.112.112.112`) — no TLS handshake, so no certificate-date failure. The worst an attacker can do is make resolution fail: chrony still verifies the server's TLS identity and NTS authentication before trusting any time.
+
+#### DHCP forward gating (per-connection)
+
+The NetworkManager dispatcher script in `cache.nix` only forwards DHCP-provided search domains to the DHCP servers on **trusted connections**. An `internalDomains` allowlist maps NetworkManager connection IDs (`GU-Dorms`, `Gu_EMP`, `GU-Wifi`) to the internal domains they may resolve; unknown connections (e.g. `Library`) forward nothing, and each DHCP-provided zone is checked against that connection's allowlist before `unbound-control forward_add`.
+
+#### Logging
+
+Unbound runs with `verbosity = 0` and per-query/per-reply logging off; only `log-servfail` remains on so actual resolution failures still surface.
+
 ### Time Synchronization & Cloudflare Warp
 
-- **Chrony & NTS Enforcement**: Replaces `systemd-timesyncd` with strict Network Time Security (NTS) enforcement (`iburst nts` configured in `Networking/TimeSync.nix`) via `time.cloudflare.com` to cryptographically secure system clock synchronization.
+- **Chrony & NTS Enforcement**: Replaces `systemd-timesyncd` with strict Network Time Security (NTS) enforcement (`iburst nts` configured in `Networking/TimeSync.nix`) via `time.cloudflare.com` and three other NTS servers to cryptographically secure system clock synchronization.
+- **Boot-time clock recovery**: `makestep 1.0 3` lets chrony jump (not slew) the clock if it's off by more than 1 second during its first 3 updates, and `nocerttimecheck 1` skips only certificate *date* checks until the first clock update — chain and hostname verification stay active, so a fake server still can't hand the system a time. Note: `makestep` only applies to chronyd's first updates after start; if the clock drifts later, restart chronyd or run `sudo chronyc makestep`.
+- **RTC in UTC**: `time.hardwareClockInLocalTime = false` — the hardware clock is treated as UTC. If dual-booting Windows, set its `RealTimeIsUniversal` registry value or the clock will drift by the local UTC offset.
+- **`time-sync-recover` service** (`Networking/TimeSync.nix`): waits for chrony to synchronize (`chronyc waitsync`), then flushes Unbound's poisoned state (`flush_bogus` + `flush_infra all`, the latter clearing any "dnscrypt-proxy is unresponsive" backoff recorded during the clock failure) and restarts dnscrypt-proxy. Runs once per boot; if the clock goes wrong later (e.g. resume from suspend), run `sudo systemctl restart time-sync-recover`.
 - **Cloudflare Warp** (`Networking/cloudflare-warp.nix`): Configured with WARN-level log filtering.
 
 ### Firewall
