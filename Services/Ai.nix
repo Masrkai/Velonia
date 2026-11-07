@@ -14,7 +14,6 @@
     url = "https://github.com/edolstra/flake-compat/archive/refs/tags/v1.1.0.tar.gz";
     sha256 = "sha256-NeCCThCEP3eCl2l/+27kNNK7QrwZB1IJCrXfrbv5oqU=";
   };
-  
   # hermes-agent =
   #   (import flake-compat {
   #     src = builtins.fetchTarball {
@@ -84,11 +83,11 @@ in {
     snip
     opencode
 
+    # pi-coding-agent
     #     (pkgs.llama-cpp.override { cudaSupport = true; })
 
     # customPackages.prime-agent
     customPackages.mcp-searxng
-    # pi-coding-agent
 
     # Hermes is very disrespectful of system pkgs
     # they want to provide everything from top to buttom
@@ -96,6 +95,29 @@ in {
     # a very large closure / download / bundel size
     # hermes-agent.packages.${pkgs.stdenv.hostPlatform.system}.default
   ];
+
+  home-manager.users.${config.identity.username} = {
+    home.stateVersion = "26.05";
+    home.packages = [
+      (pkgs.symlinkJoin {
+        name = "pi-coding-agent";
+        buildInputs = [pkgs.makeWrapper];
+        paths = [pkgs.pi-coding-agent];
+        postBuild = ''
+          wrapProgram $out/bin/pi \
+            --set NPM_CONFIG_PREFIX /home/${config.identity.username}/.pi/npm/ \
+            --prefix PATH : ${
+            pkgs.lib.makeBinPath [
+              pkgs.nodejs_latest
+              pkgs.bubblewrap
+              pkgs.socat
+              pkgs.ripgrep
+            ]
+          }
+        '';
+      })
+    ];
+  };
 
   services.litellm = {
     enable = false;
