@@ -42,6 +42,7 @@
     {
       systemPackages = with pkgs; [
         wl-clipboard-rs
+        kdotool
       ];
     }
 
@@ -67,6 +68,8 @@
     }
   ];
 
+  programs.ydotool.enable = true;
+  users.users.${config.identity.username}.extraGroups = ["ydotool"];
   # alright are you ready for your daily dose of dump f*cking shit ?
   # check this out: https://github.com/NixOS/nixpkgs/issues/363068#issuecomment-5209282821
   # this was my literal interpretation of this in nix
