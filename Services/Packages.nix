@@ -13,6 +13,9 @@
     #? Masrkai built
     vera = pkgs.callPackage ../Programs/masrkai-built/vera.nix {};
     harper = pkgs.callPackage ../Programs/masrkai-built/harper.nix {};
+
+    mrkc = pkgs.callPackage ../Programs/masrkai-built/mrkc.nix {};
+
   };
 in {
   programs.iotop = {
@@ -21,6 +24,8 @@ in {
 
   environment.systemPackages = with pkgs; [
     customPackages.harper
+    customPackages.vera
+    customPackages.mrkc
 
     ffmpeg-full
 
@@ -133,9 +138,10 @@ in {
     btrfs-progs
     # customPackages.harper
 
-    customPackages.vera
     customPackages.logisim-evolution
 
     cryptsetup
+
+
   ];
 }
