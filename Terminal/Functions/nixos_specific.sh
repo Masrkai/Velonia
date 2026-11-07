@@ -30,6 +30,9 @@ switch(){
     # Refresh sudo once upfront
     sudo -v || return 1
 
+    # forces stderr
+    set -o pipefail
+
     # Use simpler command - sudo inherits the current shell
     sudo nixos-rebuild switch --show-trace 2>&1 | nom
 }
