@@ -18,8 +18,8 @@
       system-features = ["big-parallel" "kvm"];
 
       # WARN: DO NOT ADD A USER TO THIS OTHER THAN ROOT
-      # WHICH IS IN FACT THE DEFAULT SO THERE IS NO NEED 
-      # TO EVEN DECLARE IT SPECIALLY DON'T ENABLE OR ADD 
+      # WHICH IS IN FACT THE DEFAULT SO THERE IS NO NEED
+      # TO EVEN DECLARE IT SPECIALLY DON'T ENABLE OR ADD
       # A NORMAL USER UNLESS YOU ABSOLUTLY KNOW WHAT YOU
       # ARE DOING
 
@@ -166,11 +166,12 @@
 
             #            jax = py-final.callPackage ./Programs/python-libs/jax.nix{ };
             jaxlib = py-prev.jaxlib-bin;
-            jax = py-prev.jax.override { cudaSupport = false; };
+            jax = py-prev.jax.override {cudaSupport = false;};
 
-            torch = py-prev.torch-bin;
-            torchaudio = py-final.torchaudio-bin;
-            torchvision = py-final.torchvision-bin;
+            torch = py-prev.torch.override {cudaSupport = false;};
+            torchaudio = py-final.torchaudio.override {cudaSupport = false;};
+            torchvision = py-final.torchvision.override {cudaSupport = false;};
+            gymnasium = py-prev.gymnasium.overridePythonAttrs {doCheck = false;};
           })
         ];
       })

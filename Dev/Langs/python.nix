@@ -49,6 +49,7 @@
         aiohttp
         netutils
         requests
+        httpx2
 
         #-> DBs / crypto
         pymysql
@@ -61,9 +62,11 @@
         screeninfo
         qrcode
         qrcode-terminal
+        orjson
 
         #-> math / stats
         numpy
+        numba
         pandas
         polars
 
@@ -78,14 +81,18 @@
 
         #-> AI / ML
         jax
+        torch
+        gymnasium 
+
         mcp
-        # ollama
         litellm
         scikit-learn
         fastembed
         sqlite-vec
         pymupdf
 
+moviepy
+pygame
         #-> CLI / TUI
         terminaltables
 
