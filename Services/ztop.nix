@@ -3,7 +3,7 @@
     ./Ai.nix
     ./Gaming.nix
     ./Jackett.nix
-    ./PipeWire.nix
+    ./Multimedia.nix
     ./Syncthing.nix
     ./Pen_Testing.nix
     ./PowerManagment.nix
@@ -15,7 +15,6 @@
     ./Virtualization/virtualisation.nix
 
 
-    ./OBS.nix
     ./Journal.nix
     ./Nextcloud.nix
 
