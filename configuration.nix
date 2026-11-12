@@ -139,8 +139,5 @@
   #---> Enable CUPS to print documents.
   services.printing.enable = false;
 
-  #--> NoiseTorch: Real-Time Microphone Noise Suppression
-  programs.noisetorch.enable = true;
-
   system.stateVersion = "25.05";
 }
