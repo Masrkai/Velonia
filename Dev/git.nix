@@ -50,4 +50,23 @@ in {
       init.defaultBranch = "main";
     };
   };
+
+  environment.systemPackages = [pkgs.lazygit];
+
+  environment.etc."lazygit/config.yml".text = ''
+    git:
+      autoFetch: false
+  '';
+
+  environment.variables.LG_CONFIG_FILE = "/etc/lazygit/config.yml";
+
+  programs.ssh = lib.mkIf (config.hardware.isAsusTuf || config.hardware.isThinkPad) {
+    startAgent = true;
+
+    extraConfig = ''
+      Host github.com
+        AddKeysToAgent yes
+        IdentityFile ~/.ssh/id_ed25519
+    '';
+  };
 }
