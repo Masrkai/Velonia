@@ -9,6 +9,7 @@ let
     kitty     = ./kitty.conf;
     ghostty   = ./ghostty.conf;
     octave    = ./octaverc.conf;
+    foot      = ./foot.ini;
   };
 
 in
@@ -33,6 +34,10 @@ in
         # ghostty
         mkdir -p ~/.config/ghostty/
         ${pkgs.coreutils}/bin/cp ${configFiles.ghostty} ~/.config/ghostty/config
+
+        # foot
+        mkdir -p ~/.config/foot/
+        ${pkgs.coreutils}/bin/cp ${configFiles.foot} ~/.config/foot/foot.ini
 
         # clangd
         mkdir -p ~/.config/clangd/

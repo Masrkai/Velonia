@@ -120,7 +120,8 @@ in {
       [
         # Terminal
         kitty
-
+        foot
+        
         # essential terminal daily ddriver utilities.
         eza
         bat
