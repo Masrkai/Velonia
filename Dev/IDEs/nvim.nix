@@ -153,7 +153,16 @@ in {
           highlight.enable = true;
           indent.enable = true;
         };
-        grammarPackages = with pkgs.vimPlugins.nvim-treesitter.builtGrammars; [
+        # Source grammars from nixvim's own treesitter package, NOT
+        # `pkgs.vimPlugins.nvim-treesitter.builtGrammars`: raw builtGrammars get
+        # wrapped with `installQueries = true`, putting upstream query files
+        # (e.g. tree-sitter-nix's `(#is-not? local)`) on runtimepath, which
+        # Neovim core has no handler for and crashes highlighting.
+        # `grammarPlugins` entries are wrapped with `installQueries = false`,
+        # so the plugin's vendored, compatible queries are used instead.
+        grammarPackages =
+          with config.programs.nixvim.plugins.treesitter.package.grammarPlugins;
+          [
           nix
           python
           c
