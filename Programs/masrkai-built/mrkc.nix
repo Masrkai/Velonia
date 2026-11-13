@@ -16,14 +16,14 @@
 }:
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "mrkc";
-  version = "1.3";
+  version = "1.4";
 
   src = fetchFromGitHub {
     owner = "Masrkai";
     repo = "MRKcompile";
     rev = "v${finalAttrs.version}";
     hash =
-      "sha256-JxSqktIW/ZFzbgDCgsumkWpZmgY7HGUH4K/HJvl1IJQ=";
+      "sha256-4GhWZBsaY9uQlaPSXg3ajuE8mE5vJGUSpP0P6c9UAd8=";
       # lib.fakeHash;
   };
 
